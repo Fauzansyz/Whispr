@@ -1,69 +1,209 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState } from "react";
+import LandingNavbar from "@/components/LandingNavbar";
+import LandingHero from "@/components/LandingHero";
+import HowItWorksSection from "@/components/HowItWorksSection";
+import GameModesSection from "@/components/GameModesSection";
+import FAQSection from "@/components/FAQSection";
+import LoginModal from "@/components/LoginModal";
+import SafetyModal from "@/components/SafetyModal";
+
+// Dashboard App Components
+import Navbar from "@/components/Navbar";
+import SendMessageView from "@/components/SendMessageView";
+import GetLinkView from "@/components/GetLinkView";
+import InboxView from "@/components/InboxView";
 
 export default function Home() {
+  const [userHandle, setUserHandle] = useState(null); // null when logged out
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSafetyOpen, setIsSafetyOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("send"); // "send", "get-link", "inbox"
+  const [viewMode, setViewMode] = useState("landing"); // "landing" or "dashboard"
+
+  const handleLoginSuccess = (handle) => {
+    setUserHandle(handle);
+    setViewMode("dashboard");
+    setActiveTab("send");
+  };
+
+  const handleLogout = () => {
+    setUserHandle(null);
+    setViewMode("landing");
+  };
+
+  const scrollToSection = (sectionId) => {
+    if (viewMode !== "landing") {
+      setViewMode("landing");
+    }
+    setTimeout(() => {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen bg-[#0f0c20] text-white flex flex-col selection:bg-rose-500 selection:text-white relative overflow-hidden font-sans">
+      {/* Background Ambient Orbs */}
+      <div className="fixed top-[-10%] left-[-10%] w-[550px] h-[550px] rounded-full bg-[#FF2E63]/15 blur-[140px] pointer-events-none animate-pulse-glow" />
+      <div className="fixed bottom-[-10%] right-[-10%] w-[550px] h-[550px] rounded-full bg-[#FF8E53]/15 blur-[140px] pointer-events-none animate-pulse-glow" />
+
+      {/* Top Navbar depending on View Mode */}
+      {viewMode === "landing" ? (
+        <LandingNavbar
+          userHandle={userHandle}
+          onOpenLogin={() => setIsLoginModalOpen(true)}
+          onLogout={handleLogout}
+          onOpenSafety={() => setIsSafetyOpen(true)}
+          onNavigateSection={scrollToSection}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.js
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+      ) : (
+        <Navbar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          unreadCount={3}
+          onOpenSafety={() => setIsSafetyOpen(true)}
+        />
+      )}
+
+      {/* View Switcher Banner for logged in user */}
+      {userHandle && (
+        <div className="w-full bg-gradient-to-r from-[#FF2E63]/20 via-[#FF0055]/20 to-[#FF8E53]/20 border-b border-white/10 px-4 py-2 flex items-center justify-between text-xs font-extrabold max-w-6xl mx-auto z-30 backdrop-blur-md">
+          <div className="flex items-center gap-2 text-rose-300">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Logged in as @{userHandle}</span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {viewMode === "landing" ? (
+              <button
+                onClick={() => setViewMode("dashboard")}
+                className="px-3 py-1 bg-white text-zinc-950 rounded-xl text-[11px] font-black hover:bg-zinc-100 transition-colors"
+              >
+                Go to Inbox & Dashboard →
+              </button>
+            ) : (
+              <button
+                onClick={() => setViewMode("landing")}
+                className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-xl text-[11px] font-bold transition-colors"
+              >
+                ← Back to Landing Page
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Main Content Area */}
+      {viewMode === "landing" ? (
+        <main className="flex-1 w-full flex flex-col items-center relative z-10">
+          <LandingHero
+            onGetStarted={(handle) => handleLoginSuccess(handle)}
+            onTryLiveDemo={() => {
+              setUserHandle("demo_user");
+              setViewMode("dashboard");
+            }}
+          />
+
+          <HowItWorksSection
+            onGetStarted={(handle) => handleLoginSuccess(handle)}
+          />
+
+          <GameModesSection
+            onSelectGamePrompt={(prompt) => {
+              setUserHandle("demo_user");
+              setViewMode("dashboard");
+              setActiveTab("send");
+            }}
+          />
+
+          <FAQSection onOpenSafety={() => setIsSafetyOpen(true)} />
+        </main>
+      ) : (
+        /* Logged-In NGL Dashboard View */
+        <main className="flex-1 w-full max-w-xl mx-auto flex flex-col items-center justify-start relative z-10 py-4">
+          {activeTab === "send" && (
+            <SendMessageView
+              username={userHandle || "alex_ngl"}
+              onSwitchToGetLink={() => setActiveTab("get-link")}
+              onOpenSafety={() => setIsSafetyOpen(true)}
+            />
+          )}
+
+          {activeTab === "get-link" && (
+            <GetLinkView
+              username={userHandle || "alex_ngl"}
+              setUsername={(h) => setUserHandle(h)}
+            />
+          )}
+
+          {activeTab === "inbox" && <InboxView />}
+        </main>
+      )}
+
+      {/* Footer */}
+      <footer className="w-full py-8 text-center text-xs text-zinc-500 font-medium relative z-10 border-t border-white/5 bg-[#0f0c20]/80 backdrop-blur-md mt-auto">
+        <div className="max-w-4xl mx-auto px-4 flex flex-col items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-zinc-400 font-bold">
+            <button
+              onClick={() => {
+                setViewMode("landing");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="hover:text-white transition-colors"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Home
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setIsLoginModalOpen(true)}
+              className="hover:text-white transition-colors text-rose-400"
             >
-              Learning
-            </a>{" "}
-            center.
+              Log In
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => scrollToSection("how-it-works")}
+              className="hover:text-white transition-colors"
+            >
+              How it Works
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => scrollToSection("game-modes")}
+              className="hover:text-white transition-colors"
+            >
+              Game Modes
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setIsSafetyOpen(true)}
+              className="hover:text-white transition-colors text-emerald-400"
+            >
+              Safety Center
+            </button>
+          </div>
+          <p className="text-[11px] text-zinc-600 mt-1">
+            © NGL App • Inspired by ngl.link anonymous Q&A web interface
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
+
+      {/* Login & Registration Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
+
+      {/* Safety Policy Modal */}
+      <SafetyModal
+        isOpen={isSafetyOpen}
+        onClose={() => setIsSafetyOpen(false)}
+      />
     </div>
   );
 }
