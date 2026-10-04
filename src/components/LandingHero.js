@@ -1,15 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, ArrowRight, ShieldCheck, Dices, Send, Lock, CheckCircle, Flame } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Sparkles, ArrowRight, ShieldCheck, Dices, Send, Lock, Flame } from "lucide-react";
 
-export default function LandingHero({ onGetStarted, onTryLiveDemo }) {
+export default function LandingHero() {
+  const router = useRouter();
   const [handleInput, setHandleInput] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const clean = handleInput.replace(/^@/, "").trim() || "alex_ngl";
-    onGetStarted(clean);
+    router.push("/register");
   };
 
   return (
@@ -59,7 +61,7 @@ export default function LandingHero({ onGetStarted, onTryLiveDemo }) {
             </div>
             <button
               type="submit"
-              className="w-full sm:w-auto shrink-0 px-6 py-3.5 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-base rotate-2 focus:rotate-none shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto shrink-0 px-6 py-3.5 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-base rounded-2xl shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Get Messages!</span>
               <ArrowRight className="w-4 h-4" />
@@ -73,7 +75,7 @@ export default function LandingHero({ onGetStarted, onTryLiveDemo }) {
           </div>
         </div>
 
-        {/* Hero Feature Showcase Cards (Floating mockups) */}
+        {/* Hero Feature Showcase Cards */}
         <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
           {/* Mock Card 1 */}
           <div className="bg-gradient-to-br from-[#FF2E63] to-[#FF8E53] p-5 rounded-3xl text-white shadow-xl border border-white/20 transform hover:-translate-y-1 transition-transform">
@@ -82,7 +84,7 @@ export default function LandingHero({ onGetStarted, onTryLiveDemo }) {
               <Dices className="w-4 h-4 text-amber-300" />
             </div>
             <h3 className="text-xl font-black leading-tight mb-3">
-              "send me anonymous messages!"
+              &quot;send me anonymous messages!&quot;
             </h3>
             <div className="bg-black/20 backdrop-blur-md rounded-xl p-2.5 text-xs text-white/90 font-medium flex items-center justify-between">
               <span>be real, am I intimidating? 😅</span>
@@ -98,16 +100,16 @@ export default function LandingHero({ onGetStarted, onTryLiveDemo }) {
                 <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
               </div>
               <p className="text-sm font-extrabold text-zinc-100 mb-2">
-                "never gonna lie, your music taste is 🔥"
+                &quot;never gonna lie, your music taste is 🔥&quot;
               </p>
               <span className="text-[11px] text-zinc-500 font-medium">2 mins ago • Anonymous</span>
             </div>
-            <button
-              onClick={onTryLiveDemo}
+            <Link
+              href="/register"
               className="mt-4 text-xs font-black text-rose-400 hover:text-rose-300 underline flex items-center gap-1"
             >
-              Try Live Interactive Demo <ArrowRight className="w-3 h-3" />
-            </button>
+              Try it yourself <ArrowRight className="w-3 h-3" />
+            </Link>
           </div>
 
           {/* Mock Card 3 */}

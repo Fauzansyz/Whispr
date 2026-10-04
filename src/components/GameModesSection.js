@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Dices, Sparkles, MessageSquare, Star, Flame, Music, ShieldAlert, Heart } from "lucide-react";
 
 const GAME_MODES = [
@@ -54,7 +55,7 @@ const GAME_MODES = [
   },
 ];
 
-export default function GameModesSection({ onSelectGamePrompt }) {
+export default function GameModesSection() {
   const [activeMode, setActiveMode] = useState(GAME_MODES[0]);
 
   return (

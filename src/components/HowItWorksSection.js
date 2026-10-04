@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { Copy, Instagram, Share2, Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { Copy, Share2, Sparkles, ArrowRight } from "lucide-react";
 
-export default function HowItWorksSection({ onGetStarted }) {
+export default function HowItWorksSection() {
   return (
     <section id="how-it-works" className="w-full py-16 px-4 sm:px-8 bg-black/40 border-y border-white/5 relative">
       <div className="max-w-5xl mx-auto">
@@ -79,13 +80,13 @@ export default function HowItWorksSection({ onGetStarted }) {
 
         {/* CTA Banner */}
         <div className="mt-12 text-center">
-          <button
-            onClick={() => onGetStarted("alex_ngl")}
-            className="px-8 py-4 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-lg rounded-2xl shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all inline-flex items-center gap-2 cursor-pointer"
+          <Link
+            href="/register"
+            className="px-8 py-4 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-lg rounded-2xl shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all inline-flex items-center gap-2"
           >
             <span>Create Your NGL Link Now</span>
             <ArrowRight className="w-5 h-5" />
-          </button>
+          </Link>
         </div>
       </div>
     </section>
