@@ -12,6 +12,7 @@ import {
   Sparkles,
   User,
 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const clean = handle.replace(/^@/, "").trim();
     if (!clean) {
@@ -33,15 +34,24 @@ export default function LoginPage() {
       setError("Enter your password");
       return;
     }
+    const result = await authClient.signIn.email({
+      email: clean,
+      password,
+    });
+    if (result.error) {
+      setError(result.error.message);
+      return;
+    }
+    if (result) {
+      // Simulate auth
+      setTimeout(() => {
+        setIsSubmitting(false);
+        router.push("/profile");
+      }, 800);
+    }
     setError("");
     setIsSubmitting(true);
-
-    // Simulate auth
-    setTimeout(() => {
-      setIsSubmitting(false);
-      router.push("/");
-    }, 800);
-  };
+  }
 
   return (
     <div className="min-h-screen bg-[#0f0c20] text-white flex flex-col items-center justify-center relative overflow-hidden px-4 py-12">
@@ -70,12 +80,12 @@ export default function LoginPage() {
           {/* Username */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-1.5">
-              Username
+              Email
             </label>
             <div className="relative">
               <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <input
-                type="text"
+                type="email"
                 value={handle}
                 onChange={(e) => {
                   setHandle(e.target.value.replace(/\s+/g, ""));

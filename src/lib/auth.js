@@ -15,6 +15,16 @@ export const auth = betterAuth({
         required: true,
         input: true,
       },
+      bio: {
+        type: "string",
+        required: false,
+        input: true,
+      },
+      isAcceptingMessages: {
+        type: "boolean",
+        required: false,
+        input: true,
+      },
     },
   },
   rateLimit: {

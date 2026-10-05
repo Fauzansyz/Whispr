@@ -3,6 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Sparkles, LogOut, Shield, Menu, X } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
 
 export default function LandingNavbar({
   userHandle,
@@ -11,6 +14,17 @@ export default function LandingNavbar({
   onNavigateSection,
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const router = useRouter()
+  const { data: session } = useSession()
+
+  const handleLogout = async () => {
+    try {
+      const res = await authClient.signOut()
+      router.refresh()
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#0f0c20]/80 border-b border-white/10 px-4 sm:px-8 py-3.5 transition-all">
@@ -136,15 +150,16 @@ export default function LandingNavbar({
             </button>
 
             <div className="pt-2 border-t border-white/10 flex flex-col gap-2">
-              {userHandle ? (
+              {session ? (
                 <div className="flex items-center justify-between p-3 bg-white/5 rounded-2xl">
-                  <span className="font-bold text-sm text-white">@{userHandle}</span>
+                  <div className="flex h-15 w-15 items-center justify-center rounded-2xl border-4 border-zinc-900 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-3xl font-black uppercase shadow-xl">f</div>
+                  <span className="font-bold text-xl text-white">@{session?.user.name}</span>
                   <button
                     onClick={() => {
-                      onLogout();
+                      handleLogout()
                       setMobileMenuOpen(false);
                     }}
-                    className="text-xs font-extrabold text-rose-400 underline cursor-pointer"
+                    className="text-xs font-extrabold text-rose-400 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] p-1.5 rounded-xl text-white cursor-pointer"
                   >
                     Log Out
                   </button>
