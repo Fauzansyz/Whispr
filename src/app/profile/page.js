@@ -325,8 +325,8 @@ export default function Profile() {
                     type="button"
                   >
                     <span
-                      className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow mx-[10px] transition-transform ${
-                        isAcceptingMessages ? "translate-x-1" : "-translate-x-6"
+                      className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow mx-[5px] transition-transform ${
+                        isAcceptingMessages ? "-translate-x-1" : "-translate-x-6"
                       }`}
                     />
                   </button>
