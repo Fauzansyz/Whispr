@@ -91,7 +91,7 @@ export default function LoginPage() {
                   setHandle(e.target.value.replace(/\s+/g, ""));
                   if (error) setError("");
                 }}
-                placeholder="your_username"
+                placeholder="example@gmail.com"
                 className="w-full pl-10 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white font-semibold placeholder-zinc-600 focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition-all"
                 autoFocus
               />
