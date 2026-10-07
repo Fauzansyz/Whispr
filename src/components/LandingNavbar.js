@@ -151,15 +151,18 @@ export default function LandingNavbar({
 
             <div className="pt-2 border-t border-white/10 flex flex-col gap-2">
               {session ? (
-                <div className="flex items-center justify-between p-3 bg-white/5 rounded-2xl">
-                  <div className="flex h-15 w-15 items-center justify-center rounded-2xl border-4 border-zinc-900 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-3xl font-black uppercase shadow-xl">f</div>
-                  <span className="font-bold text-xl text-white">@{session?.user.name}</span>
+                <div onClick={() => {
+                  router.push("/profile")
+                }} className="flex items-center justify-between p-3 rounded-2xl">
+                  <div className="flex h-15 w-15 items-center justify-center rounded-2xl border-4 border-zinc-900 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-3xl font-black uppercase shadow-xl">{session.user.name.charAt(0)}</div>
+
+
                   <button
                     onClick={() => {
                       handleLogout()
                       setMobileMenuOpen(false);
                     }}
-                    className="text-xs font-extrabold text-rose-400 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] p-1.5 rounded-xl text-white cursor-pointer"
+                    className="text-xs font-extrabold text-rose-400 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] p-2 rounded-xl text-white cursor-pointer"
                   >
                     Log Out
                   </button>

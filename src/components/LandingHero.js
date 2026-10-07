@@ -61,7 +61,7 @@ export default function LandingHero() {
             </div>
             <button
               type="submit"
-              className="w-full sm:w-auto shrink-0 px-6 py-3.5 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-base rounded-2xl shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto shrink-0 px-6 py-3.5 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-base -rotate-1 focus:rotate-0 shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Get Messages!</span>
               <ArrowRight className="w-4 h-4" />
