@@ -1,5 +1,5 @@
 import { createHmac } from "node:crypto";
-import { and, count, desc, gt, sql } from "drizzle-orm";
+import { and, count, desc, eq, gt, sql } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import db from "@/lib/db";
 import { message, user } from "../../../../drizzle/schema";
