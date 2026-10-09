@@ -1,19 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Sparkles, ArrowRight, ShieldCheck, Dices, Send, Lock, Flame } from "lucide-react";
 
 export default function LandingHero() {
-  const router = useRouter();
-  const [handleInput, setHandleInput] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    router.push("/register");
-  };
-
   return (
     <section className="w-full pt-8 pb-16 px-4 sm:px-8 flex flex-col items-center justify-center relative overflow-hidden">
       {/* Background ambient lighting */}
@@ -46,31 +37,19 @@ export default function LandingHero() {
           Share your NGL link on your story. Friends can send you honest questions, secrets, & compliments anonymously without installing any app!
         </p>
 
-        {/* Hero Handle Registration Card */}
-        <div className="w-full max-w-md bg-zinc-900/90 border border-white/15 rounded-3xl p-3 sm:p-4 shadow-2xl backdrop-blur-xl mb-10">
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center gap-2">
-            <div className="relative w-full flex items-center">
-              <span className="absolute left-4 font-black text-zinc-400 text-lg">@</span>
-              <input
-                type="text"
-                value={handleInput}
-                onChange={(e) => setHandleInput(e.target.value.replace(/\s+/g, ""))}
-                placeholder="your_instagram_handle"
-                className="w-full pl-9 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white font-bold text-base placeholder-zinc-600 focus:outline-none focus:border-rose-500 transition-colors"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full sm:w-auto shrink-0 px-6 py-3.5 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-base -rotate-1 focus:rotate-0 shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span>Get Messages!</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </form>
-          <div className="flex items-center justify-center gap-3 mt-3 text-xs text-zinc-400 font-medium">
+        {/* Create account CTA */}
+        <div className="mb-10 w-full max-w-md rounded-3xl border border-white/15 bg-zinc-900/90 p-4 shadow-2xl backdrop-blur-xl">
+          <Link
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] px-6 py-3.5 text-base font-black text-white shadow-xl shadow-[#FF2E63]/30 transition-all hover:opacity-95 active:scale-95"
+            href="/register"
+          >
+            <span>Create your anonymous link</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <div className="mt-3 flex items-center justify-center gap-3 text-xs font-medium text-zinc-400">
             <span className="flex items-center gap-1 text-emerald-400">
               <Lock className="w-3 h-3" />
-              100% Free & No password required
+              Free & no account needed to send messages
             </span>
           </div>
         </div>

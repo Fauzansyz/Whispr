@@ -49,7 +49,7 @@ export default function Profile() {
 
   const handleSave = async (event) => {
     event.preventDefault();
-    const cleanUsername = username.replace(/^@/, "").trim();
+    const cleanUsername = username.replace(/^@/, "").trim().toLowerCase();
     const cleanName = name.trim();
 
     if (!cleanName) {
@@ -58,6 +58,10 @@ export default function Profile() {
     }
     if (!cleanUsername) {
       setError("Choose a username for your profile link.");
+      return;
+    }
+    if (!/^[a-z0-9_.]{3,30}$/.test(cleanUsername)) {
+      setError("Usernames must be 3–30 characters using letters, numbers, dots, or underscores.");
       return;
     }
 

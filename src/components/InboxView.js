@@ -1,278 +1,387 @@
 "use client";
 
-import React, { useState } from "react";
-import { Inbox, Eye, Sparkles, Share2, MapPin, Smartphone, Lock, X, Check, Heart, MessageSquare } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Archive,
+  Check,
+  Download,
+  Inbox,
+  LoaderCircle,
+  MailOpen,
+  MessageCircle,
+  Star,
+  Trash2,
+} from "lucide-react";
+import { downloadStoryImage } from "@/lib/download-story";
 
-const INITIAL_MESSAGES = [
-  {
-    id: 1,
-    prompt: "send me anonymous messages!",
-    content: "never gonna lie, your music taste is actually 10/10 🔥",
-    time: "2 mins ago",
-    unread: true,
-    hint: { device: "iPhone 15 Pro", location: "New York, USA", app: "Instagram Link" },
-  },
-  {
-    id: 2,
-    prompt: "tell me a secret nobody knows... 🤫",
-    content: "I've had a huge crush on you since last summer 😳",
-    time: "15 mins ago",
-    unread: true,
-    hint: { device: "Samsung Galaxy S24", location: "California, USA", app: "Snapchat Link" },
-  },
-  {
-    id: 3,
-    prompt: "what song reminds you of me? 🎵",
-    content: "Midnight City by M83 always makes me think of our road trip!",
-    time: "1 hour ago",
-    unread: true,
-    hint: { device: "iPhone 14", location: "London, UK", app: "Instagram Link" },
-  },
-  {
-    id: 4,
-    prompt: "be real, am I intimidating? 😅",
-    content: "At first glance yes! But once people talk to you, you're super friendly!",
-    time: "3 hours ago",
-    unread: false,
-    hint: { device: "Google Pixel 8", location: "Toronto, Canada", app: "Twitter Link" },
-  },
+const FILTERS = [
+  { id: "all", label: "All" },
+  { id: "unread", label: "Unread" },
+  { id: "starred", label: "Starred" },
+  { id: "spam", label: "Spam" },
 ];
 
-export default function InboxView({ onSelectMessage }) {
-  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+function formatDate(value) {
+  const date = new Date(value);
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
+}
+
+export default function InboxView({ username }) {
+  const [messages, setMessages] = useState([]);
   const [activeMessage, setActiveMessage] = useState(null);
-  const [showHintModal, setShowHintModal] = useState(false);
-  const [showReplyModal, setShowReplyModal] = useState(false);
-  const [storyBgIndex, setStoryBgIndex] = useState(0);
+  const [filter, setFilter] = useState("all");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
 
-  const unreadCount = messages.filter((m) => m.unread).length;
+  const unreadCount = messages.filter((message) => !message.isRead && !message.isSpam).length;
+  const visibleMessages = useMemo(
+    () =>
+      messages.filter((message) => {
+        if (filter === "unread") return !message.isRead && !message.isSpam;
+        if (filter === "starred") return message.isStarred && !message.isSpam;
+        if (filter === "spam") return message.isSpam;
+        return !message.isSpam;
+      }),
+    [filter, messages],
+  );
 
-  const handleOpenMessage = (msg) => {
-    // Mark as read
-    setMessages((prev) =>
-      prev.map((m) => (m.id === msg.id ? { ...m, unread: false } : m))
-    );
-    setActiveMessage(msg);
+  const loadMessages = async (signal) => {
+    setError("");
+    try {
+      const response = await fetch("/api/messages", {
+        cache: "no-store",
+        signal,
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Could not load your inbox.");
+      setMessages(result.messages);
+    } catch (loadError) {
+      if (loadError.name !== "AbortError") {
+        setError(loadError.message || "Could not load your inbox.");
+      }
+    } finally {
+      if (!signal?.aborted) setIsLoading(false);
+    }
   };
 
-  const storyGradients = [
-    "from-[#FF2E63] via-[#FF0055] to-[#FF8E53]",
-    "from-purple-600 via-pink-600 to-rose-500",
-    "from-indigo-600 via-blue-600 to-teal-400",
-    "from-amber-500 via-orange-600 to-red-600",
-  ];
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/messages", { cache: "no-store", signal: controller.signal })
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Could not load your inbox.");
+        setMessages(result.messages);
+      })
+      .catch((loadError) => {
+        if (loadError.name !== "AbortError") {
+          setError(loadError.message || "Could not load your inbox.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setIsLoading(false);
+      });
+    return () => controller.abort();
+  }, []);
+
+  const updateMessage = async (messageId, action) => {
+    setError("");
+    setNotice("");
+    try {
+      const response = await fetch(`/api/messages/${messageId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Could not update this message.");
+      const changes = {
+        read: { isRead: true },
+        unread: { isRead: false },
+        star: { isStarred: true },
+        unstar: { isStarred: false },
+        spam: { isSpam: true },
+        unspam: { isSpam: false },
+      }[action];
+      setMessages((current) =>
+        current.map((item) => item.id === messageId ? { ...item, ...changes } : item),
+      );
+      setActiveMessage((current) =>
+        current?.id === messageId ? { ...current, ...changes } : current,
+      );
+    } catch (actionError) {
+      setError(actionError.message || "Could not update this message.");
+    }
+  };
+
+  const handleOpenMessage = async (message) => {
+    setActiveMessage(message);
+    if (!message.isRead) await updateMessage(message.id, "read");
+  };
+
+  const handleDelete = async (messageId) => {
+    setError("");
+    try {
+      const response = await fetch(`/api/messages/${messageId}`, { method: "DELETE" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Could not delete this message.");
+      setMessages((current) => current.filter((message) => message.id !== messageId));
+      setActiveMessage(null);
+      setNotice("Message deleted.");
+    } catch (deleteError) {
+      setError(deleteError.message || "Could not delete this message.");
+    }
+  };
+
+  const handleDownloadStory = async () => {
+    setIsDownloading(true);
+    setError("");
+    try {
+      const headline =
+        activeMessage.content.length > 150
+          ? `${activeMessage.content.slice(0, 147)}…`
+          : activeMessage.content;
+      await downloadStoryImage({
+        label: "Anonymous message",
+        headline: `“${headline}”`,
+        footer: `reply to @${username}`,
+        filename: `ngl-reply-${activeMessage.id}.png`,
+      });
+    } catch (downloadError) {
+      setError(downloadError.message || "Could not download the story image.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
-    <div className="w-full max-w-md mx-auto px-4 py-6 flex flex-col items-center">
-      {/* Header */}
-      <div className="w-full flex items-center justify-between mb-6">
+    <section className="w-full px-4 py-6">
+      <header className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight flex items-center gap-2">
+          <h1 className="flex items-center gap-2 text-3xl font-black tracking-tight">
             Inbox
             {unreadCount > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-500 text-white animate-pulse">
+              <span className="rounded-full bg-rose-500 px-2.5 py-1 text-xs font-black text-white">
                 {unreadCount} new
               </span>
             )}
           </h1>
-          <p className="text-xs text-zinc-400 mt-0.5">Click any message to open & reply</p>
+          <p className="mt-1 text-sm text-zinc-400">
+            Anonymous messages sent to @{username}.
+          </p>
         </div>
-
-        <div className="p-3 bg-white/5 border border-white/10 rounded-2xl">
-          <Inbox className="w-6 h-6 text-rose-400" />
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+          <Inbox className="h-6 w-6 text-rose-400" />
         </div>
-      </div>
+      </header>
 
-      {/* Message List */}
-      <div className="w-full flex flex-col gap-3">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            onClick={() => handleOpenMessage(msg)}
-            className={`w-full p-4 rounded-3xl border transition-all cursor-pointer relative overflow-hidden group ${
-              msg.unread
-                ? "bg-gradient-to-r from-[#FF2E63]/20 to-transparent border-rose-500/40 shadow-lg shadow-rose-500/10 hover:border-rose-500"
-                : "bg-zinc-900/80 border-white/10 hover:border-white/20"
+      {notice && (
+        <p className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-300" role="status">
+          {notice}
+        </p>
+      )}
+      {error && (
+        <p className="mb-4 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-300" role="alert">
+          {error}
+        </p>
+      )}
+
+      <nav aria-label="Filter messages" className="mb-4 flex gap-2 overflow-x-auto pb-1">
+        {FILTERS.map((item) => (
+          <button
+            aria-pressed={filter === item.id}
+            className={`shrink-0 rounded-full border px-4 py-2 text-xs font-black transition ${
+              filter === item.id
+                ? "border-rose-400/50 bg-rose-500/15 text-rose-200"
+                : "border-white/10 bg-white/5 text-zinc-400 hover:text-white"
             }`}
+            key={item.id}
+            onClick={() => setFilter(item.id)}
+            type="button"
           >
-            {/* Unread indicator dot */}
-            {msg.unread && (
-              <div className="absolute top-4 right-4 w-2.5 h-2.5 rounded-full bg-rose-500 shadow-md shadow-rose-500/50"></div>
-            )}
-
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-[10px] uppercase font-black tracking-wider text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20">
-                anonymous
-              </span>
-              <span className="text-[11px] font-medium text-zinc-500">{msg.time}</span>
-            </div>
-
-            <p className="text-sm font-extrabold text-white line-clamp-2 leading-snug group-hover:text-rose-200 transition-colors">
-              "{msg.content}"
-            </p>
-
-            <div className="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-xs text-zinc-400 font-semibold">
-              <span className="text-[11px] text-zinc-500 truncate max-w-[200px]">Prompt: {msg.prompt}</span>
-              <span className="flex items-center gap-1 text-rose-400 group-hover:translate-x-0.5 transition-transform">
-                <Eye className="w-3.5 h-3.5" />
-                View
-              </span>
-            </div>
-          </div>
+            {item.label}
+          </button>
         ))}
-      </div>
+      </nav>
 
-      {/* Message Detail Modal */}
-      {activeMessage && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-          <div className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-3xl p-6 shadow-2xl relative overflow-hidden flex flex-col items-center">
-            {/* Close Button */}
-            <button
-              onClick={() => setActiveMessage(null)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            {/* Header prompt box */}
-            <div className="w-full bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] p-4 rounded-2xl text-white text-center mb-4 shadow-lg">
-              <span className="text-[10px] font-black uppercase tracking-widest text-white/80 block mb-1">
-                Anonymous Q&A
-              </span>
-              <span className="text-xs font-extrabold block">"{activeMessage.prompt}"</span>
-            </div>
-
-            {/* Message Body */}
-            <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-5 mb-6 text-center">
-              <p className="text-xl font-black text-white leading-relaxed">
-                "{activeMessage.content}"
-              </p>
-              <span className="text-[11px] text-zinc-400 font-medium block mt-3">
-                Received {activeMessage.time}
-              </span>
-            </div>
-
-            {/* Actions */}
-            <div className="w-full flex flex-col gap-2.5">
-              <button
-                onClick={() => setShowHintModal(true)}
-                className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-rose-500 hover:opacity-95 text-white font-extrabold text-sm rounded-2xl shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Who sent this? (Unlock Hint)</span>
-              </button>
-
-              <button
-                onClick={() => setShowReplyModal(true)}
-                className="w-full py-3 px-4 bg-white hover:bg-zinc-100 text-black font-extrabold text-sm rounded-2xl shadow-md flex items-center justify-center gap-2"
-              >
-                <Share2 className="w-4 h-4 text-black" />
-                <span>Reply on IG Story</span>
-              </button>
-            </div>
-          </div>
+      {isLoading ? (
+        <div className="flex min-h-48 items-center justify-center text-sm font-semibold text-zinc-400">
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-rose-400" />
+          Loading messages...
         </div>
-      )}
-
-      {/* Hint / Pro Peek Modal */}
-      {showHintModal && activeMessage && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-xs bg-zinc-900 border border-amber-500/30 rounded-3xl p-6 shadow-2xl relative text-center">
+      ) : visibleMessages.length === 0 ? (
+        <div className="rounded-3xl border border-white/10 bg-zinc-900/80 px-6 py-12 text-center">
+          <MessageCircle className="mx-auto mb-3 h-8 w-8 text-zinc-500" />
+          <h2 className="text-lg font-black">
+            {filter === "spam" ? "No spam messages" : "Your inbox is quiet"}
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-zinc-400">
+            {filter === "all"
+              ? "Share your link to start receiving anonymous messages."
+              : "There are no messages in this section."}
+          </p>
+          {filter === "all" && (
             <button
-              onClick={() => setShowHintModal(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto mb-3">
-              <Lock className="w-6 h-6" />
-            </div>
-
-            <h3 className="text-lg font-black text-white mb-1">NGL Pro Hint</h3>
-            <p className="text-xs text-zinc-400 mb-4">
-              Here are the sender device details captured by NGL:
-            </p>
-
-            <div className="bg-white/5 rounded-2xl p-3 text-left space-y-2 mb-4 text-xs font-semibold text-zinc-300 border border-white/5">
-              <div className="flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-rose-400" />
-                <span>Device: {activeMessage.hint.device}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-amber-400" />
-                <span>Location: {activeMessage.hint.location}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-emerald-400" />
-                <span>Source: {activeMessage.hint.app}</span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowHintModal(false)}
-              className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-black text-xs rounded-xl"
-            >
-              Got it!
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* IG Story Reply Modal Generator */}
-      {showReplyModal && activeMessage && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-3xl p-5 shadow-2xl relative flex flex-col items-center">
-            <button
-              onClick={() => setShowReplyModal(false)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <span className="text-xs font-black uppercase text-zinc-400 mb-3">
-              Story Reply Generator
-            </span>
-
-            {/* Story Card canvas mockup */}
-            <div className={`w-full bg-gradient-to-br ${storyGradients[storyBgIndex]} rounded-3xl p-6 text-white text-center shadow-2xl mb-4 transition-all duration-300 border border-white/20 flex flex-col items-center justify-center min-h-[220px]`}>
-              <div className="bg-black/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider mb-2">
-                {activeMessage.prompt}
-              </div>
-              <h2 className="text-xl font-black text-white leading-tight mb-4">
-                "{activeMessage.content}"
-              </h2>
-              <div className="bg-white text-zinc-900 text-xs font-black px-4 py-2 rounded-xl shadow-lg">
-                Reply: "Thanks for asking! 😊"
-              </div>
-            </div>
-
-            {/* Color switcher */}
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-[11px] font-bold text-zinc-400">Color:</span>
-              {storyGradients.map((g, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setStoryBgIndex(idx)}
-                  className={`w-6 h-6 rounded-full bg-gradient-to-br ${g} border-2 ${
-                    storyBgIndex === idx ? "border-white scale-110" : "border-transparent"
-                  }`}
-                />
-              ))}
-            </div>
-
-            <button
+              className="mt-5 rounded-xl bg-white/10 px-4 py-2.5 text-sm font-bold transition hover:bg-white/15"
               onClick={() => {
-                alert("Story image ready! Copy to Instagram Story.");
-                setShowReplyModal(false);
+                setIsLoading(true);
+                loadMessages().finally(() => setIsLoading(false));
               }}
-              className="w-full py-3 bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] text-white font-extrabold text-sm rounded-2xl shadow-lg"
+              type="button"
             >
-              Share to Instagram Story
+              Refresh inbox
             </button>
-          </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {visibleMessages.map((message) => (
+            <article
+              className={`rounded-3xl border p-4 transition ${
+                message.isRead
+                  ? "border-white/10 bg-zinc-900/80"
+                  : "border-rose-500/35 bg-gradient-to-r from-rose-500/10 to-zinc-900/80"
+              }`}
+              key={message.id}
+            >
+              <button
+                className="block w-full text-left"
+                onClick={() => handleOpenMessage(message)}
+                type="button"
+              >
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-rose-300">
+                    <span className="rounded-full border border-rose-500/20 bg-rose-500/10 px-2 py-1">
+                      anonymous
+                    </span>
+                    {!message.isRead && <span className="h-2 w-2 rounded-full bg-rose-400" />}
+                  </span>
+                  <time className="text-[11px] text-zinc-500" dateTime={message.createdAt}>
+                    {formatDate(message.createdAt)}
+                  </time>
+                </div>
+                <p className="line-clamp-3 text-sm font-bold leading-6 text-zinc-100">
+                  {message.content}
+                </p>
+                {message.prompt && (
+                  <p className="mt-2 truncate text-xs text-zinc-500">Prompt: {message.prompt}</p>
+                )}
+              </button>
+              <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-2">
+                <span className="text-[11px] font-semibold text-zinc-500">
+                  {message.isRead ? "Read" : "New message"}
+                </span>
+                <button
+                  aria-label={message.isStarred ? "Remove star" : "Star message"}
+                  className={`rounded-lg p-2 transition hover:bg-white/10 ${
+                    message.isStarred ? "text-amber-300" : "text-zinc-500 hover:text-amber-200"
+                  }`}
+                  onClick={() => updateMessage(message.id, message.isStarred ? "unstar" : "star")}
+                  type="button"
+                >
+                  <Star className={`h-4 w-4 ${message.isStarred ? "fill-current" : ""}`} />
+                </button>
+              </div>
+            </article>
+          ))}
         </div>
       )}
-    </div>
+
+      {activeMessage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+          onClick={() => setActiveMessage(null)}
+          role="presentation"
+        >
+          <section
+            aria-labelledby="message-detail-heading"
+            aria-modal="true"
+            className="relative w-full max-w-md rounded-3xl border border-white/10 bg-zinc-900 p-5 shadow-2xl sm:p-7"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <button
+              aria-label="Close message"
+              className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-zinc-300 transition hover:bg-white/20"
+              onClick={() => setActiveMessage(null)}
+              type="button"
+            >
+              ×
+            </button>
+            <div className="mb-4 rounded-2xl bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] p-4 text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-white/75">
+                Anonymous message
+              </span>
+              {activeMessage.prompt && (
+                <p className="mt-2 text-sm font-bold">{activeMessage.prompt}</p>
+              )}
+            </div>
+            <h2 className="sr-only" id="message-detail-heading">Message details</h2>
+            <blockquote className="break-words rounded-2xl border border-white/10 bg-white/5 p-5 text-center text-lg font-bold leading-7">
+              “{activeMessage.content}”
+            </blockquote>
+            <time className="mt-3 block text-center text-xs text-zinc-500" dateTime={activeMessage.createdAt}>
+              Received {formatDate(activeMessage.createdAt)}
+            </time>
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              <button
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-xs font-bold transition hover:bg-white/10"
+                onClick={() => updateMessage(activeMessage.id, activeMessage.isRead ? "unread" : "read")}
+                type="button"
+              >
+                <MailOpen className="h-4 w-4" />
+                Mark {activeMessage.isRead ? "unread" : "read"}
+              </button>
+              <button
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-xs font-bold transition hover:bg-white/10"
+                onClick={() => updateMessage(activeMessage.id, activeMessage.isStarred ? "unstar" : "star")}
+                type="button"
+              >
+                <Star className={`h-4 w-4 ${activeMessage.isStarred ? "fill-current text-amber-300" : ""}`} />
+                {activeMessage.isStarred ? "Unstar" : "Star"}
+              </button>
+              <button
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/20 bg-rose-500/10 px-3 py-3 text-xs font-bold text-rose-200 transition hover:bg-rose-500/20"
+                onClick={() => updateMessage(activeMessage.id, activeMessage.isSpam ? "unspam" : "spam")}
+                type="button"
+              >
+                <Archive className="h-4 w-4" />
+                {activeMessage.isSpam ? "Restore" : "Report spam"}
+              </button>
+              <button
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-xs font-bold text-zinc-300 transition hover:bg-white/10"
+                onClick={() => handleDelete(activeMessage.id)}
+                type="button"
+              >
+                <Trash2 className="h-4 w-4" />
+                Delete
+              </button>
+            </div>
+            <button
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] px-4 py-3 text-sm font-black shadow-lg shadow-rose-500/15 transition hover:opacity-90 disabled:opacity-60"
+              disabled={isDownloading}
+              onClick={handleDownloadStory}
+              type="button"
+            >
+              {isDownloading ? (
+                <LoaderCircle className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              Download reply story
+            </button>
+            {error && (
+              <p className="mt-3 text-center text-xs font-semibold text-rose-300" role="alert">
+                {error}
+              </p>
+            )}
+          </section>
+        </div>
+      )}
+    </section>
   );
 }

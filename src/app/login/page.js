@@ -16,7 +16,7 @@ import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [handle, setHandle] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
@@ -25,33 +25,36 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const clean = handle.replace(/^@/, "").trim();
-    if (!clean) {
-      setError("Enter your username to continue");
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !cleanEmail.includes("@")) {
+      setError("Enter a valid email address to continue.");
       return;
     }
     if (!password) {
       setError("Enter your password");
       return;
     }
-    const result = await authClient.signIn.email({
-      email: clean,
-      password,
-    });
-    if (result.error) {
-      setError(result.error.message);
-      return;
-    }
-    if (result) {
-      // Simulate auth
-      setTimeout(() => {
-        setIsSubmitting(false);
-        router.push("/profile");
-      }, 800);
-    }
     setError("");
     setIsSubmitting(true);
-  }
+    try {
+      const result = await authClient.signIn.email({
+        email: cleanEmail,
+        password,
+        rememberMe,
+        callbackURL: "/dashboard",
+      });
+      if (result.error) {
+        setError(result.error.message || "Could not sign in. Check your credentials.");
+        return;
+      }
+      router.push("/dashboard");
+    } catch (signInError) {
+      console.error("Sign-in failed:", signInError);
+      setError(signInError?.message || "Could not sign in. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0f0c20] text-white flex flex-col items-center justify-center relative overflow-hidden px-4 py-12">
@@ -86,9 +89,9 @@ export default function LoginPage() {
               <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <input
                 type="email"
-                value={handle}
+                value={email}
                 onChange={(e) => {
-                  setHandle(e.target.value.replace(/\s+/g, ""));
+                  setEmail(e.target.value);
                   if (error) setError("");
                 }}
                 placeholder="example@gmail.com"

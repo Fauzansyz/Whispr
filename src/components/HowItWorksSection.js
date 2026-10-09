@@ -30,14 +30,14 @@ export default function HowItWorksSection() {
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
                 1
               </div>
-              <h3 className="text-xl font-black text-white mb-2">1. Enter Handle</h3>
+              <h3 className="text-xl font-black text-white mb-2">1. Create your profile</h3>
               <p className="text-sm text-zinc-400 font-medium leading-relaxed mb-4">
-                Type your Instagram handle. No account registration or password required.
+                Create an account and choose the username for your personal message link.
               </p>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-2xl p-3 text-xs font-bold text-zinc-300 flex items-center gap-2">
               <span className="text-rose-400">@yourname</span>
-              <span className="text-emerald-400 ml-auto text-[10px] font-black uppercase">Instant</span>
+              <span className="text-emerald-400 ml-auto text-[10px] font-black uppercase">Your profile</span>
             </div>
           </div>
 
@@ -52,7 +52,7 @@ export default function HowItWorksSection() {
                 Get your unique link <code className="text-rose-300">ngl.link/yourname</code> and copy it with one tap.
               </p>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-3 text-xs font-bold text-zinc-300 flex items-center justify-between">
+           <div className="bg-white/5 border border-white/10 rounded-2xl p-3 text-xs font-bold text-zinc-300 flex items-center justify-between">
               <span className="truncate">ngl.link/yourname</span>
               <button className="px-2.5 py-1 rounded-xl bg-rose-500 text-white text-[10px] font-black uppercase">
                 Copy
@@ -82,7 +82,7 @@ export default function HowItWorksSection() {
         <div className="mt-12 text-center">
           <Link
             href="/register"
-            className="px-8 py-4 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-lg rounded-2xl shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all inline-flex items-center gap-2"
+            className="px-8 py-4 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-lg rotate-1 focus:rotate-0 transition-transform shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all inline-flex items-center gap-2"
           >
             <span>Create Your NGL Link Now</span>
             <ArrowRight className="w-5 h-5" />
