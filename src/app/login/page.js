@@ -194,7 +194,7 @@ export default function LoginPage() {
         <div className="flex flex-col gap-2.5">
           <button
             type="button"
-            onClick={handleSocialLogin("google")}
+            onClick={() => handleSocialLogin("google")}
             className="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2.5 transition-colors"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
