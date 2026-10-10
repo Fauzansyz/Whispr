@@ -1,93 +1,62 @@
 export default function MessageStoryImage({ message, username, storyRef }) {
+  const contentLength = message.content?.length ?? 0;
+
+  const messageFontSize = Math.max(
+    28,
+    Math.min(72, Math.sqrt(800000 / Math.max(contentLength, 100)))
+  );
+
   return (
     <div
-      aria-hidden="true"
-      className="pointer-events-none fixed left-[-1200px] top-0"
       ref={storyRef}
-      style={{
-        alignItems: "center",
-        background:
-          "radial-gradient(circle at 80% 18%, rgba(255,142,83,.5), transparent 34%), linear-gradient(150deg, #ff2e63 0%, #9f174e 48%, #17102e 100%)",
-        boxSizing: "border-box",
-        color: "#fff",
-        display: "flex",
-        flexDirection: "column",
-        fontFamily: "Arial, sans-serif",
-        height: 1920,
-        justifyContent: "space-between",
-        padding: "170px 90px 120px",
-        width: 1080,
-      }}
+      aria-hidden="true"
+      className="pointer-events-none fixed -left-[1200px] top-0 flex h-[1350px] w-[1080px] items-center justify-center overflow-hidden bg-[#080709] font-sans text-white"
     >
-      <header style={{ textAlign: "center" }}>
-        <div style={{ fontSize: 76, fontWeight: 900, letterSpacing: "-5px", lineHeight: 1 }}>
-          ngl
+      {/* Main chat card */}
+      <div className="flex w-[990px] flex-col rounded-[68px] border-2 border-white/[0.10] bg-[#19191b] p-[56px]">
+
+        {/* Anonymous message header */}
+        <div className="relative mb-[44px] flex min-h-[236px] flex-col items-center justify-center rounded-[44px] bg-gradient-to-r from-[#ff2e63] to-[#ff8e53] px-[42px] py-[38px] text-center">
+          <span className="text-[25px] font-black uppercase tracking-[4px] text-white/80">
+            Anonymous message
+          </span>
+
+          {message.prompt && (
+            <p className="mt-[36px] text-[36px] font-bold leading-tight">
+              {message.prompt}
+            </p>
+          )}
         </div>
-        <div
+
+        {/* Message bubble */}
+        <blockquote
+          className="flex min-h-[196px] items-center justify-center rounded-[42px] border-2 border-white/[0.07] bg-[#242426] px-[42px] py-[46px] text-center font-bold leading-[1.3]"
           style={{
-            fontSize: 26,
-            fontWeight: 700,
-            letterSpacing: "6px",
-            marginTop: 24,
-            opacity: 0.8,
-          }}
-        >
-          ANONYMOUS MESSAGE
-        </div>
-      </header>
-      <article
-        style={{
-          alignItems: "center",
-          background: "#fff8fb",
-          borderRadius: 52,
-          boxShadow: "0 32px 80px rgba(8,5,20,.35)",
-          boxSizing: "border-box",
-          color: "#221728",
-          display: "flex",
-          flex: "1 1 auto",
-          flexDirection: "column",
-          justifyContent: "center",
-          margin: "90px 0",
-          maxHeight: 1160,
-          minHeight: 600,
-          padding: "80px",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        <div style={{ color: "#e83d70", fontSize: 24, fontWeight: 900, letterSpacing: "4px" }}>
-          ANONYMOUS
-        </div>
-        {message.prompt && (
-          <p
-            style={{
-              color: "#a82559",
-              fontSize: 30,
-              fontWeight: 700,
-              lineHeight: 1.35,
-              margin: "42px 0 0",
-            }}
-          >
-            {message.prompt}
-          </p>
-        )}
-        <p
-          style={{
-            fontSize: Math.max(24, Math.min(64, 6400 / Math.max(message.content.length, 100))),
-            fontWeight: 700,
-            lineHeight: 1.3,
-            margin: message.prompt ? "56px 0 0" : "52px 0 0",
+            fontSize: `${messageFontSize}px`,
             overflowWrap: "anywhere",
-            whiteSpace: "pre-wrap",
+            wordBreak: "normal",
           }}
         >
           “{message.content}”
-        </p>
-      </article>
-      <footer style={{ fontSize: 34, fontWeight: 800, textAlign: "center" }}>
-        <div>reply to @{username}</div>
-        <div style={{ fontSize: 28, marginTop: 18, opacity: 0.8 }}>ngl.link</div>
-      </footer>
+        </blockquote>
+
+        {/* Timestamp */}
+        <div className="mt-[36px] text-center text-[30px] font-medium text-[#85858d]">
+          Received anonymous message
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-[54px] flex flex-col items-center gap-[18px] text-center">
+          <div className="text-[32px] font-extrabold">
+            reply to @{username}
+          </div>
+
+          <div className="text-[27px] font-bold text-white/65">
+            whispr
+          </div>
+        </footer>
+      </div>
     </div>
+
   );
 }

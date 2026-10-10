@@ -13,7 +13,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { downloadHtmlImage } from "@/lib/download-story";
-import MessageStoryImage from "@/components/MessageStoryImage";
+import MessageStoryImage from "./MessageStoryImage";
 
 const FILTERS = [
   { id: "all", label: "All" },
@@ -286,7 +286,7 @@ export default function InboxView({ username }) {
 
       {activeMessage && (
         <>
-          <MessageStoryImage message={activeMessage} storyRef={storyRef} username={username} />
+        <MessageStoryImage message={activeMessage} storyRef={storyRef} username={username} />
           <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
             onClick={() => setActiveMessage(null)}
@@ -319,7 +319,7 @@ export default function InboxView({ username }) {
             <blockquote className="break-words rounded-2xl border border-white/10 bg-white/5 p-5 text-center text-lg font-bold leading-7">
               “{activeMessage.content}”
             </blockquote>
-            <time className="mt-3 block text-center text-xs text-zinc-500" dateTime={activeMessage.createdAt}>
+             <time className="mt-3 block text-center text-xs text-zinc-500" dateTime={activeMessage.createdAt}>
               Received {formatDate(activeMessage.createdAt)}
             </time>
             <div className="mt-5 grid grid-cols-2 gap-2">

@@ -44,7 +44,7 @@ export default function GetLinkView({ username }) {
     setIsDownloading(true);
     setError("");
     try {
-      await downloadStoryImage({
+      await download({
         label: "Send me anonymous messages",
         headline: "Ask me anything!",
         subtext: "Send me a message anonymously",
