@@ -23,6 +23,21 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  const handleSocialLogin = async (provider) => {
+    if (provider === "google") {
+      const result = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: `${window.location.origin}/dashboard`
+      })
+      if (result.error) {
+        console.error("Sign-in failed:", result.error);
+        setError(result.error.message || "Could not sign in. Please try again.");
+        return;
+      }
+      router.push("/dashboard");
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const cleanEmail = email.trim();
@@ -179,6 +194,7 @@ export default function LoginPage() {
         <div className="flex flex-col gap-2.5">
           <button
             type="button"
+            onClick={handleSocialLogin("google")}
             className="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2.5 transition-colors"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
