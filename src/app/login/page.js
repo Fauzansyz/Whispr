@@ -25,16 +25,21 @@ export default function LoginPage() {
 
   const handleSocialLogin = async (provider) => {
     if (provider === "google") {
-      const result = await authClient.signIn.social({
-        provider: "google",
-        callbackURL: `${window.location.origin}/dashboard`
-      })
-      if (result.error) {
-        console.error("Sign-in failed:", result.error);
-        setError(result.error.message || "Could not sign in. Please try again.");
-        return;
+      try {
+        const result = await authClient.signIn.social({
+          provider: "google",
+          callbackURL: `${window.location.origin}/dashboard`
+        })
+        if (result.error) {
+          console.error("Sign-in failed:", result.error);
+          setError(result.error.message || "Could not sign in. Please try again.");
+          return;
+        }
+        router.push("/dashboard");
+      } catch (err) {
+        console.error("Sign-in failed:", err);
+        setError(err?.message || "Could not sign in. Please try again.");
       }
-      router.push("/dashboard");
     }
   }
 
