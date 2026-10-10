@@ -1,4 +1,4 @@
-import { pgTable, text, uuid, timestamp, boolean, foreignKey, primaryKey, unique } from "drizzle-orm/pg-core"
+import { pgTable, text, uuid, timestamp, boolean, foreignKey, primaryKey, unique, index } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -23,6 +23,7 @@ export const message = pgTable("message", {
 	id: uuid().defaultRandom().primaryKey(),
 	recipientId: text("recipient_id").notNull().references(() => user.id, { onDelete: "cascade" } ),
 	content: text().notNull(),
+	prompt: text(),
 	imageBase64: text("image_base64"),
 	imageMimeType: text("image_mime_type"),
 	isRead: boolean("is_read").default(false).notNull(),
@@ -31,7 +32,10 @@ export const message = pgTable("message", {
 	burnAfterRead: boolean("burn_after_read").default(false).notNull(),
 	senderIpHash: text("sender_ip_hash"),
 	createdAt: timestamp("created_at").default(sql`now()`).notNull(),
-});
+}, (table) => [
+	index("message_recipient_created_at_idx").on(table.recipientId, table.createdAt),
+	index("message_sender_ip_created_at_idx").on(table.senderIpHash, table.createdAt),
+]);
 
 export const reaction = pgTable("reaction", {
 	id: uuid().defaultRandom().primaryKey(),

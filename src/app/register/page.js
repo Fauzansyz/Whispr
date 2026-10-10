@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   Check,
@@ -21,6 +22,7 @@ const PASSWORD_RULES = [
 ];
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,10 +44,14 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const cleanUser = username.replace(/^@/, "").trim();
+    const cleanUser = username.replace(/^@/, "").trim().toLowerCase();
 
     if (!cleanUser) {
       setError("Pick a username");
+      return;
+    }
+    if (!/^[a-z0-9_.]{3,30}$/.test(cleanUser)) {
+      setError("Usernames must be 3–30 characters using letters, numbers, dots, or underscores.");
       return;
     }
     if (!email || !email.includes("@")) {
@@ -73,7 +79,7 @@ export default function RegisterPage() {
         email: email,
         password: password,
         username: cleanUser,
-        callbackURL: "/",
+        callbackURL: "/dashboard",
       });
       if (result.error) {
         setError(
@@ -82,6 +88,7 @@ export default function RegisterPage() {
         return;
       }
       setStep(2);
+      router.push("/dashboard");
     } catch (err) {
       console.error("Sign-up error:", err);
       setError(
@@ -112,7 +119,7 @@ export default function RegisterPage() {
 
           <div className="w-full flex flex-col gap-3">
             <Link
-              href="/"
+              href="/dashboard"
               className="w-full py-4 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-lg rounded-2xl shadow-xl shadow-[#FF2E63]/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               Go to Dashboard

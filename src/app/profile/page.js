@@ -49,7 +49,7 @@ export default function Profile() {
 
   const handleSave = async (event) => {
     event.preventDefault();
-    const cleanUsername = username.replace(/^@/, "").trim();
+    const cleanUsername = username.replace(/^@/, "").trim().toLowerCase();
     const cleanName = name.trim();
 
     if (!cleanName) {
@@ -58,6 +58,10 @@ export default function Profile() {
     }
     if (!cleanUsername) {
       setError("Choose a username for your profile link.");
+      return;
+    }
+    if (!/^[a-z0-9_.]{3,30}$/.test(cleanUsername)) {
+      setError("Usernames must be 3–30 characters using letters, numbers, dots, or underscores.");
       return;
     }
 
@@ -194,14 +198,14 @@ export default function Profile() {
               <div className="px-5 pb-5 sm:px-7">
                 <div className="-mt-10 mb-4 flex items-end justify-between">
                   <div className="flex h-20 w-20 items-center justify-center rounded-3xl border-4 border-zinc-900 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-3xl font-black uppercase shadow-xl">
-                    {(name || user.name || user.email || "?").charAt(0)}
+                    {(user.email || user.name|| "?").charAt(0)}
                   </div>
                   <div className="mb-1 flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-bold text-emerald-300">
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Account secured
                   </div>
                 </div>
-                <h2 className="text-xl font-black">{user.name}</h2>
+                <h2 className="text-xl font-black">{user.email}</h2>
                 <p className="mt-1 text-sm text-zinc-400">
                   @{user.username || "username-not-set"}
                 </p>

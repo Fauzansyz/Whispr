@@ -100,7 +100,7 @@ export default function GameModesSection() {
 
                 <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs">
                   <span className="font-extrabold text-rose-300 italic truncate max-w-[180px]">
-                    "{game.prompt}"
+                    &quot;{game.prompt}&quot;
                   </span>
                   <span className="text-[10px] font-black uppercase text-zinc-500">
                     {isSelected ? "Active" : "Select"}
@@ -117,14 +117,14 @@ export default function GameModesSection() {
             Selected Mode: {activeMode.title}
           </span>
           <h3 className="text-2xl font-black text-white mb-4">
-            "{activeMode.prompt}"
+            &quot;{activeMode.prompt}&quot;
           </h3>
-          <button
-            onClick={() => onSelectGamePrompt(activeMode.prompt)}
-            className="w-full py-3 bg-white text-zinc-950 font-black text-sm rounded-2xl shadow-lg hover:bg-zinc-100 transition-colors"
+          <Link
+            href="/register"
+            className="w-full py-3 bg-white text-zinc-950 font-black text-sm rounded-2xl shadow-lg hover:bg-zinc-100 transition-colors inline-flex items-center justify-center"
           >
-            Use This Prompt in NGL Link
-          </button>
+            Create a link with this prompt
+          </Link>
         </div>
       </div>
     </section>

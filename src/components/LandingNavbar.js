@@ -9,7 +9,6 @@ import { useSession } from "@/lib/auth-client";
 
 export default function LandingNavbar({
   userHandle,
-  onLogout,
   onOpenSafety,
   onNavigateSection,
 }) {
@@ -19,10 +18,14 @@ export default function LandingNavbar({
 
   const handleLogout = async () => {
     try {
-      const res = await authClient.signOut()
+      const result = await authClient.signOut()
+      if (result.error) {
+        console.error("Sign out failed:", result.error)
+        return
+      }
       router.refresh()
     } catch (err) {
-      console.log(err)
+      console.error("Sign out failed:", err)
     }
   }
 
@@ -78,8 +81,14 @@ export default function LandingNavbar({
                 </div>
                 <span>@{userHandle}</span>
               </div>
+              <Link
+                href="/dashboard"
+                className="rounded-xl bg-white/10 px-3 py-2 text-xs font-bold text-white transition hover:bg-white/15"
+              >
+                Dashboard
+              </Link>
               <button
-                onClick={onLogout}
+                onClick={handleLogout}
                 className="p-1.5 hover:bg-white/10 rounded-xl text-zinc-400 hover:text-rose-400 transition-colors cursor-pointer"
                 title="Log Out"
               >
@@ -151,15 +160,21 @@ export default function LandingNavbar({
 
             <div className="pt-2 border-t border-white/10 flex flex-col gap-2">
               {session ? (
-                <div className="flex items-center justify-between p-3 bg-white/5 rounded-2xl">
-                  <div className="flex h-15 w-15 items-center justify-center rounded-2xl border-4 border-zinc-900 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-3xl font-black uppercase shadow-xl">f</div>
-                  <span className="font-bold text-xl text-white">@{session?.user.name}</span>
+                <div className="flex items-center justify-between gap-3 p-3 rounded-2xl">
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex min-w-0 flex-1 items-center gap-3"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border-4 border-zinc-900 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-2xl font-black uppercase shadow-xl">{session.user.name.charAt(0)}</div>
+                    <span className="truncate text-sm font-bold text-white">Dashboard</span>
+                  </Link>
                   <button
-                    onClick={() => {
-                      handleLogout()
+                    onClick={async () => {
+                      await handleLogout()
                       setMobileMenuOpen(false);
                     }}
-                    className="text-xs font-extrabold text-rose-400 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] p-1.5 rounded-xl text-white cursor-pointer"
+                    className="text-xs font-extrabold text-rose-400 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] p-2 rounded-xl text-white cursor-pointer"
                   >
                     Log Out
                   </button>
