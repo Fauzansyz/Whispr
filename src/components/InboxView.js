@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Archive,
   Check,
@@ -12,7 +12,8 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
-import { downloadStoryImage } from "@/lib/download-story";
+import { downloadHtmlImage } from "@/lib/download-story";
+import MessageStoryImage from "@/components/MessageStoryImage";
 
 const FILTERS = [
   { id: "all", label: "All" },
@@ -32,6 +33,7 @@ function formatDate(value) {
 export default function InboxView({ username }) {
   const [messages, setMessages] = useState([]);
   const [activeMessage, setActiveMessage] = useState(null);
+  const storyRef = useRef(null);
   const [filter, setFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -141,16 +143,7 @@ export default function InboxView({ username }) {
     setIsDownloading(true);
     setError("");
     try {
-      const headline =
-        activeMessage.content.length > 150
-          ? `${activeMessage.content.slice(0, 147)}…`
-          : activeMessage.content;
-      await downloadStoryImage({
-        label: "Anonymous message",
-        headline: `“${headline}”`,
-        footer: `reply to @${username}`,
-        filename: `ngl-reply-${activeMessage.id}.png`,
-      });
+      await downloadHtmlImage(storyRef.current, `ngl-reply-${activeMessage.id}.png`);
     } catch (downloadError) {
       setError(downloadError.message || "Could not download the story image.");
     } finally {
@@ -292,11 +285,13 @@ export default function InboxView({ username }) {
       )}
 
       {activeMessage && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-          onClick={() => setActiveMessage(null)}
-          role="presentation"
-        >
+        <>
+          <MessageStoryImage message={activeMessage} storyRef={storyRef} username={username} />
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+            onClick={() => setActiveMessage(null)}
+            role="presentation"
+          >
           <section
             aria-labelledby="message-detail-heading"
             aria-modal="true"
@@ -306,7 +301,7 @@ export default function InboxView({ username }) {
           >
             <button
               aria-label="Close message"
-              className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-zinc-300 transition hover:bg-white/20"
+              className="absolute right-5 top-5 rounded-full p-3 text-zinc-300 transition hover:bg-white/20"
               onClick={() => setActiveMessage(null)}
               type="button"
             >
@@ -380,7 +375,8 @@ export default function InboxView({ username }) {
               </p>
             )}
           </section>
-        </div>
+          </div>
+        </>
       )}
     </section>
   );

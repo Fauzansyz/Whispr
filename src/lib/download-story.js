@@ -15,6 +15,32 @@ function drawWrappedText(context, text, x, y, maxWidth, lineHeight) {
   if (line) context.fillText(line, x, currentY);
 }
 
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.append(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+export async function downloadHtmlImage(element, filename) {
+  if (!element) throw new Error("Could not find the message image.");
+
+  const { toBlob } = await import("html-to-image");
+  await document.fonts.ready;
+  const blob = await toBlob(element, {
+    width: 1080,
+    height: 1920,
+    pixelRatio: 1,
+    cacheBust: true,
+  });
+  if (!blob) throw new Error("Could not export this message image.");
+  downloadBlob(blob, filename);
+}
+
 export async function downloadStoryImage({
   label,
   headline,
@@ -72,12 +98,5 @@ export async function downloadStoryImage({
       else reject(new Error("Could not export this story image."));
     }, "image/png");
   });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = filename;
-  document.body.append(anchor);
-  anchor.click();
-  anchor.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  downloadBlob(blob, filename);
 }
