@@ -15,11 +15,13 @@ const normalizeUsername = (value) =>
 async function createUsername(user) {
   const emailUsername = user.email?.split("@")[0]?.split("+")[0] ?? "";
   const nameUsername = user.name ?? "";
-  const normalized = normalizeUsername(emailUsername);
-  const nameFallback = normalizeUsername(nameUsername);
+  const normalizedName = normalizeUsername(nameUsername);
+  const normalizedEmail = normalizeUsername(emailUsername);
+  // Prefer display name (Google/OAuth gives a real name like "Jane Smith" → "janesmith")
+  // Fall back to email local part, then a generic prefix
   const base =
-    (normalized.length >= 3 && normalized) ||
-    (nameFallback.length >= 3 && nameFallback) ||
+    (normalizedName.length >= 3 && normalizedName) ||
+    (normalizedEmail.length >= 3 && normalizedEmail) ||
     "user";
 
   for (let suffix = 1; ; suffix += 1) {
