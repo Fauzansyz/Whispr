@@ -37,7 +37,7 @@ export default function MessageStoryImage({ message, username, storyRef }) {
             wordBreak: "normal",
           }}
         >
-          “{message.content}”
+          {message.content}
         </blockquote>
 
         {/* Timestamp */}
