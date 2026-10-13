@@ -82,7 +82,7 @@ export default function HowItWorksSection() {
         <div className="mt-12 text-center">
           <Link
             href="/register"
-            className="px-8 py-4 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-lg rotate-1 focus:rotate-0 transition-transform shadow-xl shadow-[#FF2E63]/30 active:scale-95 transition-all inline-flex items-center gap-2"
+            className="px-8 py-4 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-lg rotate-1 focus:rotate-0 transition-transform active:scale-95 transition-all inline-flex items-center gap-2"
           >
             <span>Create Your NGL Link Now</span>
             <ArrowRight className="w-5 h-5" />

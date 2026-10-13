@@ -10,19 +10,35 @@ export default function LandingHero() {
       {/* Background ambient lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#FF2E63]/20 via-[#FF0055]/15 to-[#FF8E53]/20 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-        {/* Top Announcement Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs font-bold text-rose-300 mb-6 hover:bg-white/10 transition-colors cursor-pointer group shadow-lg">
-          <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-ping" />
-          <span className="text-white font-extrabold flex items-center gap-1">
-            <Flame className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-            NGL Web 2.0 is live!
-          </span>
-          <span className="text-zinc-500">•</span>
-          <span className="group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-            Try instant Q&A <ArrowRight className="w-3 h-3 text-rose-400" />
-          </span>
+      <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10 backdrop-blur-lg">
+
+
+        <div className="flex blur-[8px] -z-10 w-[90%] mt-10 absolute rotate-5 flex-col p-[15px]">
+          <div className="mb-4 rounded-2xl bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] p-4 text-center">
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/75">
+              Anonymous message
+            </span>
+            <p className="mt-2 text-sm font-bold">testtt</p>
+          </div>
+          <h2 className="sr-only" id="message-detail-heading">Message details</h2>
+          <blockquote className="break-words rounded-2xl border border-white/10 bg-white/5 p-5 text-center text-lg font-bold leading-7">
+            “huyyyy”
+          </blockquote>
+
+          <div className="-rotate-15 mt-3 p-[10px]">
+            <div className="mb-4 rounded-2xl bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] p-4 text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-white/75">
+                Anonymous message
+              </span>
+              <p className="mt-2 text-sm font-bold">testtt</p>
+            </div>
+            <h2 className="sr-only" id="message-detail-heading">Message details</h2>
+            <blockquote className="break-words rounded-2xl border border-white/10 bg-white/5 p-5 text-center text-lg font-bold leading-7">
+              “huyyyy”
+            </blockquote>
+          </div>
         </div>
+
 
         {/* Hero Title */}
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[1.1] mb-6">
@@ -38,9 +54,9 @@ export default function LandingHero() {
         </p>
 
         {/* Create account CTA */}
-        <div className="mb-10 w-full max-w-md rounded-3xl border border-white/15 bg-zinc-900/90 p-4 shadow-2xl backdrop-blur-xl">
+        <div className="mb-10 w-full max-w-md p-4">
           <Link
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] px-6 py-3.5 text-base font-black text-white shadow-xl shadow-[#FF2E63]/30 transition-all hover:opacity-95 active:scale-95"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] px-6 py-3.5 text-base font-black text-white transition-all hover:opacity-95 active:scale-95"
             href="/register"
           >
             <span>Create your anonymous link</span>
