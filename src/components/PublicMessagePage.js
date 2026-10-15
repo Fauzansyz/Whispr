@@ -63,9 +63,9 @@ export default function PublicMessagePage({ username }) {
       <div className="relative z-10 w-full max-w-md">
         <Link href="/" className="mb-8 flex items-center justify-center gap-2.5">
           <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] text-xl font-black italic shadow-lg shadow-rose-500/25">
-            ngl
+            Ws
           </span>
-          <span className="text-xl font-black tracking-tight">ngl.link</span>
+          <span className="text-xl font-black tracking-tight">Whispr</span>
         </Link>
 
         {isLoading ? (
