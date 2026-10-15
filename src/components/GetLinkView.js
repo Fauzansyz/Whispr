@@ -26,7 +26,8 @@ export default function GetLinkView({ username }) {
   const [copied, setCopied] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [error, setError] = useState("");
-  const publicLink = `ngl.link/${username}`;
+  const publicLink = `${window.location
+  .origin}/${username}`;
 
   const handleCopy = async () => {
     setError("");
@@ -48,8 +49,8 @@ export default function GetLinkView({ username }) {
         label: "Send me anonymous messages",
         headline: "Ask me anything!",
         subtext: "Send me a message anonymously",
-        footer: `ngl.link/${username}`,
-        filename: `ngl-link-${username}.png`,
+        footer: `${window.location.origin}/${username}`,
+        filename: `whispr-${username}.png`,
       });
     } catch (downloadError) {
       console.error("Could not download share image:", downloadError);
@@ -66,7 +67,7 @@ export default function GetLinkView({ username }) {
           <Share2 className="h-3.5 w-3.5" />
           Share your profile
         </div>
-        <h1 className="text-3xl font-black tracking-tight">Get your NGL link</h1>
+        <h1 className="text-3xl font-black tracking-tight">Get your WS link</h1>
         <p className="mt-2 text-sm text-zinc-400">
           Share it with friends and collect anonymous messages.
         </p>
@@ -112,7 +113,7 @@ export default function GetLinkView({ username }) {
             <p className="text-2xl font-black">Ask me anything!</p>
             <div className="mx-auto mt-5 w-fit rounded-xl bg-white px-4 py-2 text-xs font-black text-zinc-900 shadow-lg">
               <Share2 className="mr-1 inline h-3.5 w-3.5 text-blue-500" />
-              ngl.link/{username}
+    {window.location.origin}/{username}
             </div>
           </div>
           <p className="relative mt-5 text-xs font-bold text-white/75">@{username}</p>

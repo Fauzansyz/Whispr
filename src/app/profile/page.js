@@ -223,7 +223,7 @@ export default function Profile() {
                 <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                   <MessageCircle className="h-5 w-5 shrink-0 text-rose-400" />
                   <span className="truncate text-sm font-bold text-zinc-200">
-                    ngl.link/{username || "your-username"}
+          {window.location.origin}/{username || "your-username"}
                   </span>
                 </div>
                 <button

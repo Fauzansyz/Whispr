@@ -52,9 +52,9 @@ export default function DashboardPage() {
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
           <Link className="flex shrink-0 items-center gap-2.5" href="/">
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] text-xl font-black italic shadow-lg shadow-rose-500/25">
-              ngl
+              Ws
             </span>
-            <span className="hidden text-lg font-black sm:block">ngl.link</span>
+            <span className="hidden text-lg font-black sm:block">Whispr</span>
           </Link>
 
           {user && (
