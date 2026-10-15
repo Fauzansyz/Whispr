@@ -35,11 +35,11 @@ export default function LandingNavbar({
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] flex items-center justify-center shadow-lg shadow-[#FF2E63]/30 group-hover:scale-105 transition-transform duration-200">
-            <span className="font-black text-white text-xl tracking-tighter italic">ngl</span>
+            <span className="font-black text-white text-xl tracking-tighter italic">Ws</span>
           </div>
           <div className="flex flex-col">
             <span className="font-black text-2xl tracking-tight text-white flex items-center gap-1.5">
-              ngl.link
+              Whispr
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </span>
             <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 -mt-1">

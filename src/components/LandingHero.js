@@ -94,7 +94,7 @@ export default function LandingHero() {
 
         <br className="hidden sm:block" />
 
-        <div className="w-full flex justify-center text-right mt-1 px-3">
+        <div className="w-full flex justify-center text-right mt-1 px-4">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[1.1] mb-6">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] drop-shadow-sm">
               messages on Instagram
@@ -103,15 +103,15 @@ export default function LandingHero() {
         </div>
 
         {/* Hero Description */}
-        <p className="text-lg sm:text-xl text-zinc-300 font-medium max-w-2xl mb-8 leading-relaxed">
-          Share your NGL link on your story. Friends can send you honest questions, secrets, & compliments anonymously without installing any app!
+        <p className="text-lg sm:text-xl text-zinc-300 font-medium max-w-2xl mb-8 leading-relaxed text-center">
+          Share your Whispr link on your story. Friends can send you honest questions, secrets, & compliments anonymously without installing any app!
         </p>
   </div>
 
         {/* Create account CTA */}
         <div className="mb-8 w-full max-w-md p-4">
           <Link
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] px-6 py-3.5 text-base font-black text-white shadow-xl shadow-[#FF2E63]/25 transition-all hover:opacity-95 active:scale-95"
+            className="flex w-full items-center justify-center gap-2 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] px-6 py-3.5 text-base font-black text-white transition-all hover:opacity-95 active:scale-95 -rotate-2"
             href="/register"
           >
             <span>Create your anonymous link</span>
