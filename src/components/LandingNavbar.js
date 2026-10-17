@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Sparkles, LogOut, Shield, Menu, X } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -15,6 +15,18 @@ export default function LandingNavbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter()
   const { data: session } = useSession()
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    let el = headerRef.current?.parentElement;
+    while (el && el !== document.body && el !== document.documentElement) {
+      const style = window.getComputedStyle(el);
+      if (style.overflow !== "visible" && style.overflow !== "clip") {
+        el.style.setProperty("overflow", "clip", "important");
+      }
+      el = el.parentElement;
+    }
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -30,8 +42,17 @@ export default function LandingNavbar({
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#0f0c20]/80 border-b border-white/10 px-4 sm:px-8 py-3.5 transition-all">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
+    <>
+      <style>{`
+        div:has(> header) {
+          overflow: clip !important;
+        }
+      `}</style>
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#0f0c20]/80 border-b border-white/10 px-4 sm:px-8 py-3.5 transition-all"
+      >
+      <div className="relative max-w-6xl mx-auto flex items-center justify-between">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] flex items-center justify-center shadow-lg shadow-[#FF2E63]/30 group-hover:scale-105 transition-transform duration-200">
@@ -40,7 +61,6 @@ export default function LandingNavbar({
           <div className="flex flex-col">
             <span className="font-black text-2xl tracking-tight text-white flex items-center gap-1.5">
               Whispr
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             </span>
             <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 -mt-1">
               anonymous q&a
@@ -202,5 +222,6 @@ export default function LandingNavbar({
         </div>
       )}
     </header>
+    </>
   );
 }

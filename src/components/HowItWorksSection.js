@@ -27,7 +27,7 @@ export default function HowItWorksSection() {
           {/* Step 1 */}
           <div className="bg-zinc-900/90 border border-white/10 rounded-3xl p-6 relative overflow-hidden group hover:border-rose-500/50 transition-all flex flex-col justify-between">
             <div>
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
+              <div className="w-10 h-10 rounded-2xl bg-[#FF2E63] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
                 1
               </div>
               <h3 className="text-xl font-black text-white mb-2">1. Create your profile</h3>
@@ -44,7 +44,7 @@ export default function HowItWorksSection() {
           {/* Step 2 */}
           <div className="bg-zinc-900/90 border border-white/10 rounded-3xl p-6 relative overflow-hidden group hover:border-rose-500/50 transition-all flex flex-col justify-between">
             <div>
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
+              <div className="w-10 h-10 rounded-2xl bg-[#FF2E63] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
                 2
               </div>
               <h3 className="text-xl font-black text-white mb-2">2. Copy Link</h3>
@@ -63,7 +63,7 @@ export default function HowItWorksSection() {
           {/* Step 3 */}
           <div className="bg-zinc-900/90 border border-white/10 rounded-3xl p-6 relative overflow-hidden group hover:border-rose-500/50 transition-all flex flex-col justify-between">
             <div>
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
+              <div className="w-10 h-10 rounded-2xl bg-[#FF2E63] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
                 3
               </div>
               <h3 className="text-xl font-black text-white mb-2">3. Add to IG Story</h3>
