@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FAQSection from "@/components/FAQSection";
-import GameModesSection from "@/components/GameModesSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import LandingHero from "@/components/LandingHero";
 import LandingNavbar from "@/components/LandingNavbar";
@@ -33,7 +32,6 @@ export default function Home() {
       <main className="relative z-10 flex w-full flex-1 flex-col items-center">
         <LandingHero />
         <HowItWorksSection />
-        <GameModesSection />
         <FAQSection onOpenSafety={() => setIsSafetyOpen(true)} />
       </main>
 

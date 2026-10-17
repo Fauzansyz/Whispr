@@ -46,6 +46,8 @@ export default function LandingHero() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#FF2E63]/20 via-[#FF0055]/15 to-[#FF8E53]/20 rounded-full blur-[140px] pointer-events-none" />
 
       {/* Flanking Floating Story Card - Left (desktop only) */}
+
+
       <div
         aria-hidden="true"
         className="hidden 2xl:flex pointer-events-none absolute left-8 top-20 w-64 -rotate-12 select-none flex-col rounded-3xl border border-white/10 bg-[#181528]/85 p-4 shadow-2xl backdrop-blur-md opacity-70 transition-transform duration-500 hover:-translate-y-2 hover:opacity-95 z-0"
@@ -56,7 +58,7 @@ export default function LandingHero() {
           </span>
           <p className="mt-1 text-xs font-bold leading-tight">send me honest opinions</p>
         </div>
-        <blockquote className="mt-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 text-center text-xs font-bold text-zinc-100 leading-snug">
+        <blockquote className="mt-2.5 rouinded-2xl border border-white/10 bg-white/5 p-3.5 text-center text-xs font-bold text-zinc-100 leading-snug">
           “you are genuinely one of the funniest people on my feed”
         </blockquote>
         <div className="mt-2 text-center text-[10px] font-semibold text-zinc-500">
@@ -83,47 +85,46 @@ export default function LandingHero() {
         </div>
       </div>
 
-      <div className="max-w-4xl px-1 flex flex-col z-10 relative mx-auto items-center">
-  <div className="w-full flex flex-col h-auto">
-        {/* Hero Title */}
-        <div className="w-[80%] bg-[#181528] rotate-2 text-center">
-          <h1 className="text-3xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[1.1] mb-1 p-2 relative -rotate-2 opacity-90">
-            Get anonymous
-          </h1>
-        </div>
+      <div className="max-w-4xl flex flex-col z-10 relative mx-auto items-center">
+        <div className="max-w-4xl rounded-3xl bg-gradient-to-tr from-[#FF2E63]/20 via-[#FF0055]/15 to-[#FF8E53]/20 h-auto p-5 flex flex-col items-center">
+          <div className="w-full flex flex-col h-auto">
+            {/* Hero Title */}
+            <div className="w-[80%] bg-[#181528] rotate-2 text-center">
+              <h1 className="text-3xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[1.1] mb-1 p-2 relative -rotate-2 opacity-90">
+                Get anonymous
+              </h1>
+            </div>
 
-        <br className="hidden sm:block" />
+            <br className="hidden sm:block" />
 
-        <div className="w-full flex justify-center text-right mt-1 px-4">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[1.1] mb-6">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] drop-shadow-sm">
-              messages on Instagram
-            </span>
-          </h1>
-        </div>
+            <div className="w-full flex justify-center text-right mt-1 px-4">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[1.1] mb-6">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] drop-shadow-sm">
+                  messages on Instagram
+                </span>
+              </h1>
+            </div>
+          </div>
 
-        {/* Hero Description */}
-        <p className="text-lg sm:text-xl text-zinc-300 font-medium max-w-2xl mb-8 leading-relaxed text-center">
-          Share your Whispr link on your story. Friends can send you honest questions, secrets, & compliments anonymously without installing any app!
-        </p>
-  </div>
-
-        {/* Create account CTA */}
-        <div className="mb-8 w-full max-w-md p-4">
-          <Link
-            className="flex w-full items-center justify-center gap-2 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] px-6 py-3.5 text-base font-black text-white transition-all hover:opacity-95 active:scale-95 -rotate-2"
-            href="/register"
-          >
-            <span>Create your anonymous link</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <div className="mt-3 flex items-center justify-center gap-3 text-xs font-medium text-zinc-400">
-            <span className="flex items-center gap-1 text-emerald-400">
-              <Lock className="w-3 h-3" />
-              Free & no account needed to send messages
-            </span>
+          {/* Create account CTA */}
+          <div className="mb-8 w-full max-w-md px-4">
+            <Link
+              className="flex w-full items-center justify-center gap-2 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] px-6 py-3.5 text-base font-black text-white transition-all hover:opacity-95 active:scale-95 -rotate-2"
+              href="/register"
+            >
+              <span>Create your anonymous link</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <div className="mt-3 flex items-center justify-center gap-3 text-xs font-medium text-zinc-400">
+              <span className="flex items-center gap-1 text-emerald-400">
+                <Lock className="w-3 h-3" />
+                Free & no account needed to send messages
+              </span>
+            </div>
           </div>
         </div>
+
+
 
         {/* Interactive Tilted Story Card Showcase (Refined evolution of your card design) */}
         <div className="relative mb-14 w-full max-w-md flex flex-col items-center">
@@ -194,8 +195,8 @@ export default function LandingHero() {
                 type="button"
                 onClick={() => setActiveIdx(idx)}
                 className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${activeIdx === idx
-                    ? "bg-white text-zinc-950 shadow-md scale-105"
-                    : "bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 border border-white/10"
+                  ? "bg-white text-zinc-950 shadow-md scale-105"
+                  : "bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 border border-white/10"
                   }`}
               >
                 {item.tag}
