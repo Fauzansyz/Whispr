@@ -2,7 +2,15 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, ShieldCheck, Dices, Send, Lock, Flame } from "lucide-react";
+import {
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Dices,
+  Send,
+  Lock,
+  Flame,
+} from "lucide-react";
 
 const INTERACTIVE_STORIES = [
   {
@@ -19,7 +27,8 @@ const INTERACTIVE_STORIES = [
   },
   {
     prompt: "tell me a secret you've never told anyone",
-    message: "i've had a crush on you since high school and never had the courage to say it 🙈",
+    message:
+      "i've had a crush on you since high school and never had the courage to say it 🙈",
     tag: "Confession",
     time: "12m ago",
   },
@@ -34,19 +43,16 @@ const INTERACTIVE_STORIES = [
 export default function LandingHero() {
   const [activeIdx, setActiveIdx] = useState(0);
   const current = INTERACTIVE_STORIES[activeIdx];
-  const nextStory = INTERACTIVE_STORIES[(activeIdx + 1) % INTERACTIVE_STORIES.length];
+  const nextStory =
+    INTERACTIVE_STORIES[(activeIdx + 1) % INTERACTIVE_STORIES.length];
 
   const handleNext = () => {
     setActiveIdx((prev) => (prev + 1) % INTERACTIVE_STORIES.length);
   };
 
   return (
-    <section className="w-full pt-8 pb-16 px-4 sm:px-8 flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-[#FF2E63]/20 via-[#FF0055]/15 to-[#FF8E53]/20 rounded-full blur-[140px] pointer-events-none" />
-
+    <section className="w-full pt-8 pb-16 px-4 sm:px-8 flex flex-col items-center justify-center relative overflow-hidden bg-[#161324]/90">
       {/* Flanking Floating Story Card - Left (desktop only) */}
-
 
       <div
         aria-hidden="true"
@@ -56,7 +62,9 @@ export default function LandingHero() {
           <span className="text-[10px] font-black uppercase tracking-widest text-white/80">
             Anonymous message
           </span>
-          <p className="mt-1 text-xs font-bold leading-tight">send me honest opinions</p>
+          <p className="mt-1 text-xs font-bold leading-tight">
+            send me honest opinions
+          </p>
         </div>
         <blockquote className="mt-2.5 rouinded-2xl border border-white/10 bg-white/5 p-3.5 text-center text-xs font-bold text-zinc-100 leading-snug">
           “you are genuinely one of the funniest people on my feed”
@@ -75,7 +83,9 @@ export default function LandingHero() {
           <span className="text-[10px] font-black uppercase tracking-widest text-white/80">
             Anonymous message
           </span>
-          <p className="mt-1 text-xs font-bold leading-tight">ask me anything 👀</p>
+          <p className="mt-1 text-xs font-bold leading-tight">
+            ask me anything 👀
+          </p>
         </div>
         <blockquote className="mt-2.5 rounded-2xl border border-white/10 bg-white/5 p-3.5 text-center text-xs font-bold text-zinc-100 leading-snug">
           “what's one thing you wish people understood about you?”
@@ -86,7 +96,7 @@ export default function LandingHero() {
       </div>
 
       <div className="max-w-4xl flex flex-col z-10 relative mx-auto items-center">
-        <div className="max-w-4xl rounded-3xl bg-gradient-to-tr from-[#FF2E63]/20 via-[#FF0055]/15 to-[#FF8E53]/20 h-auto p-5 flex flex-col items-center">
+        <div className="max-w-4xl rounded-3xl bg-gradient-to-tr from-[#FF2E63]/20 via-[#FF0055]/15 to-[#FF8E53]/20 h-auto p-5 md:p-10 flex flex-col items-center">
           <div className="w-full flex flex-col h-auto">
             {/* Hero Title */}
             <div className="w-[80%] bg-[#181528] rotate-2 text-center">
@@ -97,8 +107,8 @@ export default function LandingHero() {
 
             <br className="hidden sm:block" />
 
-            <div className="w-full flex justify-center text-right mt-1 px-4">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[1.1] mb-6">
+            <div className="w-full flex justify-center text-right mt-1 px-4 md:min-w-3xl">
+              <h1 className="text-5xl sm:text-6xl md:text-5xl font-black tracking-tight text-white leading-[1.1] mb-6">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] drop-shadow-sm">
                   messages on Instagram
                 </span>
@@ -124,10 +134,8 @@ export default function LandingHero() {
           </div>
         </div>
 
-
-
         {/* Interactive Tilted Story Card Showcase (Refined evolution of your card design) */}
-        <div className="relative mb-14 w-full max-w-md flex flex-col items-center">
+        <div className="relative mb-12 w-full max-w-md flex flex-col items-center mt-5">
           {/* Stacked Back Card (Layered tilt effect) */}
           <div
             aria-hidden="true"
@@ -194,10 +202,11 @@ export default function LandingHero() {
                 key={idx}
                 type="button"
                 onClick={() => setActiveIdx(idx)}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${activeIdx === idx
-                  ? "bg-white text-zinc-950 shadow-md scale-105"
-                  : "bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 border border-white/10"
-                  }`}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  activeIdx === idx
+                    ? "bg-white text-zinc-950 shadow-md scale-105"
+                    : "bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 border border-white/10"
+                }`}
               >
                 {item.tag}
               </button>
@@ -232,7 +241,9 @@ export default function LandingHero() {
               <p className="text-sm font-extrabold text-zinc-100 mb-2">
                 &quot;never gonna lie, your music taste is 🔥&quot;
               </p>
-              <span className="text-[11px] text-zinc-500 font-medium">2 mins ago • Anonymous</span>
+              <span className="text-[11px] text-zinc-500 font-medium">
+                2 mins ago • Anonymous
+              </span>
             </div>
             <Link
               href="/register"
@@ -249,9 +260,12 @@ export default function LandingHero() {
                 <span>AI Moderated</span>
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <h4 className="text-sm font-black mb-1">Cyberbullying Protection</h4>
+              <h4 className="text-sm font-black mb-1">
+                Cyberbullying Protection
+              </h4>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                NGL uses world-class AI safety models to automatically detect and block inappropriate or harmful content.
+                NGL uses world-class AI safety models to automatically detect
+                and block inappropriate or harmful content.
               </p>
             </div>
             <span className="text-[11px] text-emerald-400 font-bold mt-3 block">
@@ -263,18 +277,30 @@ export default function LandingHero() {
         {/* Stats Ribbon */}
         <div className="mt-14 flex flex-wrap items-center justify-center gap-8 sm:gap-12 border-t border-white/10 pt-8 text-center">
           <div>
-            <span className="block text-2xl sm:text-3xl font-black text-white">10M+</span>
-            <span className="text-xs text-zinc-400 font-bold uppercase tracking-wider">Messages Sent</span>
+            <span className="block text-2xl sm:text-3xl font-black text-white">
+              10M+
+            </span>
+            <span className="text-xs text-zinc-400 font-bold uppercase tracking-wider">
+              Messages Sent
+            </span>
           </div>
           <div className="w-px h-8 bg-white/10 hidden sm:block" />
           <div>
-            <span className="block text-2xl sm:text-3xl font-black text-rose-400">#1</span>
-            <span className="text-xs text-zinc-400 font-bold uppercase tracking-wider">Anonymous App</span>
+            <span className="block text-2xl sm:text-3xl font-black text-rose-400">
+              #1
+            </span>
+            <span className="text-xs text-zinc-400 font-bold uppercase tracking-wider">
+              Anonymous App
+            </span>
           </div>
           <div className="w-px h-8 bg-white/10 hidden sm:block" />
           <div>
-            <span className="block text-2xl sm:text-3xl font-black text-emerald-400">100%</span>
-            <span className="text-xs text-zinc-400 font-bold uppercase tracking-wider">Privacy Guaranteed</span>
+            <span className="block text-2xl sm:text-3xl font-black text-emerald-400">
+              100%
+            </span>
+            <span className="text-xs text-zinc-400 font-bold uppercase tracking-wider">
+              Privacy Guaranteed
+            </span>
           </div>
         </div>
       </div>

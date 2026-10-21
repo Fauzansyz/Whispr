@@ -1,12 +1,14 @@
 "use client";
-
 import React from "react";
 import Link from "next/link";
 import { Copy, Share2, Sparkles, ArrowRight } from "lucide-react";
 
 export default function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="w-full py-16 px-4 sm:px-8 bg-black/40 border-y border-white/5 relative">
+    <section
+      id="how-it-works"
+      className="w-full py-16 px-4 sm:px-8 bg-[#161324]/90 relative"
+    >
       <div className="max-w-5xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -18,7 +20,8 @@ export default function HowItWorksSection() {
             How NGL Works
           </h2>
           <p className="text-base text-zinc-400 mt-2 max-w-lg mx-auto font-medium">
-            Start getting anonymous messages on your Instagram Story in less than 60 seconds.
+            Start getting anonymous messages on your Instagram Story in less
+            than 60 seconds.
           </p>
         </div>
 
@@ -30,14 +33,19 @@ export default function HowItWorksSection() {
               <div className="w-10 h-10 rounded-2xl bg-[#FF2E63] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
                 1
               </div>
-              <h3 className="text-xl font-black text-white mb-2">1. Create your profile</h3>
+              <h3 className="text-xl font-black text-white mb-2">
+                1. Create your profile
+              </h3>
               <p className="text-sm text-zinc-400 font-medium leading-relaxed mb-4">
-                Create an account and choose the username for your personal message link.
+                Create an account and choose the username for your personal
+                message link.
               </p>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-2xl p-3 text-xs font-bold text-zinc-300 flex items-center gap-2">
               <span className="text-rose-400">@yourname</span>
-              <span className="text-emerald-400 ml-auto text-[10px] font-black uppercase">Your profile</span>
+              <span className="text-emerald-400 ml-auto text-[10px] font-black uppercase">
+                Your profile
+              </span>
             </div>
           </div>
 
@@ -47,12 +55,16 @@ export default function HowItWorksSection() {
               <div className="w-10 h-10 rounded-2xl bg-[#FF2E63] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
                 2
               </div>
-              <h3 className="text-xl font-black text-white mb-2">2. Copy Link</h3>
+              <h3 className="text-xl font-black text-white mb-2">
+                2. Copy Link
+              </h3>
               <p className="text-sm text-zinc-400 font-medium leading-relaxed mb-4">
-                Get your unique link <code className="text-rose-300">ngl.link/yourname</code> and copy it with one tap.
+                Get your unique link{" "}
+                <code className="text-rose-300">ngl.link/yourname</code> and
+                copy it with one tap.
               </p>
             </div>
-           <div className="bg-white/5 border border-white/10 rounded-2xl p-3 text-xs font-bold text-zinc-300 flex items-center justify-between">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-3 text-xs font-bold text-zinc-300 flex items-center justify-between">
               <span className="truncate">ngl.link/yourname</span>
               <button className="px-2.5 py-1 rounded-xl bg-rose-500 text-white text-[10px] font-black uppercase">
                 Copy
@@ -66,9 +78,12 @@ export default function HowItWorksSection() {
               <div className="w-10 h-10 rounded-2xl bg-[#FF2E63] text-white font-black text-lg flex items-center justify-center mb-4 shadow-lg shadow-[#FF2E63]/20">
                 3
               </div>
-              <h3 className="text-xl font-black text-white mb-2">3. Add to IG Story</h3>
+              <h3 className="text-xl font-black text-white mb-2">
+                3. Add to IG Story
+              </h3>
               <p className="text-sm text-zinc-400 font-medium leading-relaxed mb-4">
-                Open Instagram Story, tap the Sticker icon, choose **LINK**, and paste your NGL link!
+                Open Instagram Story, tap the Sticker icon, choose **LINK**, and
+                paste your NGL link!
               </p>
             </div>
             <div className="bg-gradient-to-tr from-purple-900 to-pink-900 border border-white/10 rounded-2xl p-3 text-xs font-bold text-white flex items-center gap-2">
