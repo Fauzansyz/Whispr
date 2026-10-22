@@ -1,8 +1,9 @@
 
 {
-  "name": "Whispr Ubuntu",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "name": "Whispr",
+  "image": "mcr.microsoft.com/devcontainers/universal:linux",
   "forwardPorts": [3000]
 }
+
 
 
