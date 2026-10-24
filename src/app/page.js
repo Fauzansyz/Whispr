@@ -14,7 +14,10 @@ export default function Home() {
   const { data: session } = useSession();
   const [isSafetyOpen, setIsSafetyOpen] = useState(false);
 
-  const scrollToSection = (sectionId) => {
+  const userAgent = navigator.userAgent;
+  console.log(userAgent);
+
+ const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -43,7 +46,7 @@ export default function Home() {
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               type="button"
             >
-              Home
+             Home
             </button>
             <span>•</span>
             <button
@@ -51,7 +54,7 @@ export default function Home() {
               onClick={() => router.push(session ? "/dashboard" : "/login")}
               type="button"
             >
-              {session ? "Dashboard" : "Log In"}
+              {session ? "Dashboard" : "Log in"}
             </button>
             <span>•</span>
             <button
