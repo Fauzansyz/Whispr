@@ -45,10 +45,7 @@ export default function DashboardPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#0f0c20] text-white">
-      <div className="pointer-events-none fixed left-[-15%] top-[-20%] h-[500px] w-[500px] rounded-full bg-[#FF2E63]/15 blur-[140px]" />
-      <div className="pointer-events-none fixed bottom-[-20%] right-[-15%] h-[500px] w-[500px] rounded-full bg-[#FF8E53]/12 blur-[140px]" />
-
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-[#0f0c20]/85 px-4 py-3 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#0f0c20]/85 px-4 py-3 backdrop-blur-xl">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
           <Link className="flex shrink-0 items-center gap-2.5" href="/">
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] text-xl font-black italic shadow-lg shadow-rose-500/25">
@@ -62,7 +59,7 @@ export default function DashboardPage() {
               <button
                 aria-pressed={tab === "inbox"}
                 className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition ${
-                  tab === "inbox" ? "bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] text-white" : "text-zinc-400 hover:text-white"
+                  tab === "inbox" ? "bg-[#FF2E63] text-white" : "text-zinc-400 hover:text-white"
                 }`}
                 onClick={() => setTab("inbox")}
                 type="button"
@@ -73,7 +70,7 @@ export default function DashboardPage() {
               <button
                 aria-pressed={tab === "share"}
                 className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition ${
-                  tab === "share" ? "bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] text-white" : "text-zinc-400 hover:text-white"
+                  tab === "share" ? "bg-[#FF2E63] text-white" : "text-zinc-400 hover:text-white"
                 }`}
                 onClick={() => setTab("share")}
                 type="button"

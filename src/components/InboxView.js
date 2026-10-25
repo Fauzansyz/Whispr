@@ -168,7 +168,7 @@ export default function InboxView({ username }) {
           </p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-          <Inbox className="h-6 w-6 text-rose-400" />
+          <Inbox className="h-6 w-6 text-[#FF8E53]" />
         </div>
       </header>
 
@@ -357,7 +357,7 @@ export default function InboxView({ username }) {
               </button>
             </div>
             <button
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] px-4 py-3 text-sm font-black shadow-lg shadow-rose-500/15 transition hover:opacity-90 disabled:opacity-60"
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#FF2E63] px-4 py-3 text-sm font-black shadow-lg shadow-rose-500/15 transition hover:opacity-90 disabled:opacity-60"
               disabled={isDownloading}
               onClick={handleDownloadStory}
               type="button"
