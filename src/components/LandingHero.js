@@ -1,16 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Sparkles,
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
   ShieldCheck,
   Dices,
   Send,
   Lock,
   Flame,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const INTERACTIVE_STORIES = [
   {
@@ -40,15 +43,50 @@ const INTERACTIVE_STORIES = [
   },
 ];
 
+const FEATURE_SHOWCASE_COUNT = 3;
+
 export default function LandingHero() {
   const [activeIdx, setActiveIdx] = useState(0);
   const current = INTERACTIVE_STORIES[activeIdx];
   const nextStory =
     INTERACTIVE_STORIES[(activeIdx + 1) % INTERACTIVE_STORIES.length];
+  const [activeFeatureIndex, setActiveFeatureIndex] = useState(0);
+  const touchStartX = useRef(null);
 
   const handleNext = () => {
     setActiveIdx((prev) => (prev + 1) % INTERACTIVE_STORIES.length);
   };
+
+  const handleFeatureTouchStart = (event) => {
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleFeatureTouchEnd = (event) => {
+    if (touchStartX.current === null) return;
+
+    const touchDelta = touchStartX.current - event.changedTouches[0].clientX;
+    touchStartX.current = null;
+
+    if (Math.abs(touchDelta) < 40) return;
+
+    setActiveFeatureIndex(
+      (index) =>
+        (index + (touchDelta > 0 ? 1 : -1) + FEATURE_SHOWCASE_COUNT) %
+        FEATURE_SHOWCASE_COUNT,
+    );
+  };
+  const autoScroll = () => {
+    setTimeout(() => {
+      setActiveFeatureIndex(
+        (index) =>
+          (index + FEATURE_SHOWCASE_COUNT - 1) % FEATURE_SHOWCASE_COUNT,
+      );
+    }, 4000);
+  };
+
+  useEffect(() => {
+    autoScroll();
+  });
 
   return (
     <section className="w-full pt-8 pb-16 px-4 sm:px-8 flex flex-col items-center justify-center relative overflow-hidden bg-[#161324]/90">
@@ -95,25 +133,35 @@ export default function LandingHero() {
         </div>
       </div>
 
-      <div className="max-w-4xl flex flex-col z-10 relative mx-auto items-center">
-        <div className="max-w-4xl rounded-3xl bg-gradient-to-tr from-[#FF2E63]/20 via-[#FF0055]/15 to-[#FF8E53]/20 h-auto p-5 md:p-10 flex flex-col items-center">
-          <div className="w-full flex flex-col h-auto">
+      <div className="w-full max-w-4xl min-w-0 flex flex-col z-10 relative mx-auto items-center">
+        <div className="w-full max-w-4xl min-w-0 rounded-3xl bg-gradient-to-tr from-[#FF2E63]/20 via-[#FF0055]/15 to-[#FF8E53]/20 h-auto p-5 md:p-10 flex flex-col items-center">
+          <div className="w-full flex flex-col h-auto md:justify-center">
             {/* Hero Title */}
-            <div className="w-[80%] bg-[#181528] rotate-2 text-center">
+            <motion.div
+              initial={{ x: -200, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ type: "spring" }}
+              className="w-[80%] bg-[#181528] rotate-2 text-center"
+            >
               <h1 className="text-3xl sm:text-6xl md:text-7xl font-black tracking-tight text-white leading-[1.1] mb-1 p-2 relative -rotate-2 opacity-90">
                 Get anonymous
               </h1>
-            </div>
+            </motion.div>
 
             <br className="hidden sm:block" />
 
-            <div className="w-full flex justify-center text-right mt-1 px-4 md:min-w-3xl">
+            <motion.div
+              initial={{ x: 200, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transitio={{ ease: "linear" }}
+              className="w-full min-w-0 flex justify-center text-right mt-1 px-4"
+            >
               <h1 className="text-5xl sm:text-6xl md:text-5xl font-black tracking-tight text-white leading-[1.1] mb-6">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] drop-shadow-sm">
                   messages on Instagram
                 </span>
               </h1>
-            </div>
+            </motion.div>
           </div>
 
           {/* Create account CTA */}
@@ -214,94 +262,108 @@ export default function LandingHero() {
           </div>
         </div>
 
-        {/* Hero Feature Showcase Cards */}
-        <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-          {/* Mock Card 1 */}
-          <div className="bg-gradient-to-br from-[#FF2E63] to-[#FF8E53] p-5 rounded-3xl text-white shadow-xl border border-white/20 transform hover:-translate-y-1 transition-transform">
-            <div className="flex items-center justify-between mb-3 text-white/80 text-xs font-black uppercase tracking-wider">
-              <span>NGL Prompt</span>
-              <Dices className="w-4 h-4 text-amber-300" />
-            </div>
-            <h3 className="text-xl font-black leading-tight mb-3">
-              &quot;send me anonymous messages!&quot;
-            </h3>
-            <div className="bg-black/20 backdrop-blur-md rounded-xl p-2.5 text-xs text-white/90 font-medium flex items-center justify-between">
-              <span>be real, am I intimidating? 😅</span>
-              <Send className="w-3.5 h-3.5 text-rose-300" />
-            </div>
-          </div>
-
-          {/* Mock Card 2 */}
-          <div className="bg-zinc-900 border border-white/10 p-5 rounded-3xl text-white shadow-xl transform hover:-translate-y-1 transition-transform flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-3 text-rose-400 text-xs font-black uppercase tracking-wider">
-                <span>Incoming Inbox</span>
-                <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
-              </div>
-              <p className="text-sm font-extrabold text-zinc-100 mb-2">
-                &quot;never gonna lie, your music taste is 🔥&quot;
-              </p>
-              <span className="text-[11px] text-zinc-500 font-medium">
-                2 mins ago • Anonymous
-              </span>
-            </div>
-            <Link
-              href="/register"
-              className="mt-4 text-xs font-black text-rose-400 hover:text-rose-300 underline flex items-center gap-1"
+        {/* Hero Feature Showcase Carousel */}
+        <div className="mt-5 w-full max-w-3xl min-w-0 text-left">
+          <div
+            aria-label="Feature showcase"
+            aria-roledescription="carousel"
+            className="overflow-hidden touch-pan-y"
+            onTouchStart={handleFeatureTouchStart}
+            onTouchEnd={handleFeatureTouchEnd}
+            role="region"
+          >
+            <div
+              className="flex transition-transform duration-500 ease-in-out motion-reduce:transition-none"
+              style={{ transform: `translateX(-${activeFeatureIndex * 100}%)` }}
             >
-              Try it yourself <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-
-          {/* Mock Card 3 */}
-          <div className="bg-zinc-900 border border-white/10 p-5 rounded-3xl text-white shadow-xl transform hover:-translate-y-1 transition-transform flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-3 text-emerald-400 text-xs font-black uppercase tracking-wider">
-                <span>AI Moderated</span>
-                <ShieldCheck className="w-4 h-4" />
+              {/* Mock Card 1 */}
+              <div
+                aria-hidden={activeFeatureIndex !== 0}
+                aria-label="1 of 3"
+                aria-roledescription="slide"
+                className="w-full shrink-0 px-2"
+                inert={activeFeatureIndex !== 0}
+                role="group"
+              >
+                <div className="h-full w-full transform rounded-3xl border border-white/20 bg-zinc-900 p-5 text-white shadow-xl transition-transform hover:-translate-y-1">
+                  <div className="mb-3 flex items-center justify-between text-xs font-black uppercase tracking-wider text-white/80">
+                    <span>NGL Prompt</span>
+                    <Dices className="h-4 w-4 text-amber-300" />
+                  </div>
+                  <h3 className="mb-3 text-xl font-black leading-tight">
+                    &quot;send me anonymous messages!&quot;
+                  </h3>
+                  <div className="flex items-center justify-between rounded-xl bg-black/20 p-2.5 text-xs font-medium text-white/90 backdrop-blur-md">
+                    <span>be real, am I intimidating? 😅</span>
+                    <Send className="h-3.5 w-3.5 text-rose-300" />
+                  </div>
+                </div>
               </div>
-              <h4 className="text-sm font-black mb-1">
-                Cyberbullying Protection
-              </h4>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                NGL uses world-class AI safety models to automatically detect
-                and block inappropriate or harmful content.
-              </p>
-            </div>
-            <span className="text-[11px] text-emerald-400 font-bold mt-3 block">
-              ✓ 100% Safe Environment
-            </span>
-          </div>
-        </div>
 
-        {/* Stats Ribbon */}
-        <div className="mt-14 flex flex-wrap items-center justify-center gap-8 sm:gap-12 border-t border-white/10 pt-8 text-center">
-          <div>
-            <span className="block text-2xl sm:text-3xl font-black text-white">
-              10M+
-            </span>
-            <span className="text-xs text-zinc-400 font-bold uppercase tracking-wider">
-              Messages Sent
-            </span>
+              {/* Mock Card 2 */}
+              <div
+                aria-hidden={activeFeatureIndex !== 1}
+                aria-label="2 of 3"
+                aria-roledescription="slide"
+                className="w-full shrink-0 px-2"
+                inert={activeFeatureIndex !== 1}
+                role="group"
+              >
+                <div className="flex h-full w-full transform flex-col justify-between rounded-3xl border border-white/10 bg-zinc-900 p-5 text-white shadow-xl transition-transform hover:-translate-y-1">
+                  <div>
+                    <div className="mb-3 flex items-center justify-between text-xs font-black uppercase tracking-wider text-rose-400">
+                      <span>Incoming Inbox</span>
+                    </div>
+                    <p className="mb-2 text-sm font-extrabold text-zinc-100">
+                      &quot;never gonna lie, your music taste is 🔥&quot;
+                    </p>
+                    <span className="text-[11px] font-medium text-zinc-500">
+                      2 mins ago • Anonymous
+                    </span>
+                  </div>
+                  <Link
+                    href="/register"
+                    className="mt-4 flex items-center gap-1 text-xs font-black text-rose-400 underline hover:text-rose-300"
+                  >
+                    Try it yourself <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Mock Card 3 */}
+              <div
+                aria-hidden={activeFeatureIndex !== 2}
+                aria-label="3 of 3"
+                aria-roledescription="slide"
+                className="w-full shrink-0 px-2"
+                inert={activeFeatureIndex !== 2}
+                role="group"
+              >
+                <div className="flex h-full w-full transform flex-col justify-between rounded-3xl border border-white/10 bg-zinc-900 p-5 text-white shadow-xl transition-transform hover:-translate-y-1">
+                  <div>
+                    <div className="mb-3 flex items-center justify-between text-xs font-black uppercase tracking-wider text-emerald-400">
+                      <span>AI Moderated</span>
+                      <ShieldCheck className="h-4 w-4" />
+                    </div>
+                    <h4 className="mb-1 text-sm font-black">
+                      Cyberbullying Protection
+                    </h4>
+                    <p className="text-xs leading-relaxed text-zinc-400">
+                      NGL uses world-class AI safety models to automatically
+                      detect and block inappropriate or harmful content.
+                    </p>
+                  </div>
+                  <span className="mt-3 block text-[11px] font-bold text-emerald-400">
+                    ✓ 100% Safe Environment
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="w-px h-8 bg-white/10 hidden sm:block" />
-          <div>
-            <span className="block text-2xl sm:text-3xl font-black text-rose-400">
-              #1
-            </span>
-            <span className="text-xs text-zinc-400 font-bold uppercase tracking-wider">
-              Anonymous App
-            </span>
-          </div>
-          <div className="w-px h-8 bg-white/10 hidden sm:block" />
-          <div>
-            <span className="block text-2xl sm:text-3xl font-black text-emerald-400">
-              100%
-            </span>
-            <span className="text-xs text-zinc-400 font-bold uppercase tracking-wider">
-              Privacy Guaranteed
-            </span>
-          </div>
+
+          <p aria-atomic="true" aria-live="polite" className="sr-only">
+            Feature {activeFeatureIndex + 1} of 3
+          </p>
         </div>
       </div>
     </section>
