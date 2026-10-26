@@ -103,14 +103,16 @@ export default function HowItWorksSection() {
         </div>
 
         {/* CTA Banner */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/register"
-            className="px-8 py-4 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] hover:opacity-95 text-white font-black text-lg rotate-1 focus:rotate-0 transition-transform active:scale-95 transition-all inline-flex items-center gap-2"
-          >
-            <span>Create Your NGL Link Now</span>
-            <ArrowRight className="w-5 h-5" />
-          </Link>
+        <div className="mt-12 text-center px-4">
+          <div className="relative max-w-md mx-auto bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] transition-all hover:opacity-95 active:scale-95 -rotate-2 p-0.5 rotate-1 focus:rotate-0  active:scale-95 transition-all">
+            <Link
+              href="/register"
+              className="flex justify-center items-center px-8 py-4 bg-[#161324]/90 hover:opacity-95 text-white font-black text-lg transition-transform gap-2"
+            >
+              <span>Create Your NGL Link Now</span>
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

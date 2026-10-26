@@ -166,13 +166,15 @@ export default function LandingHero() {
 
           {/* Create account CTA */}
           <div className="mb-8 w-full max-w-md px-4">
+  <div className="relative max-w-md mx-auto bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] transition-all hover:opacity-95 active:scale-95 -rotate-2 p-0.5">
             <Link
-              className="flex w-full items-center justify-center gap-2 bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] px-6 py-3.5 text-base font-black text-white transition-all hover:opacity-95 active:scale-95 -rotate-2"
+              className="flex w-full items-center justify-center gap-2 bg-[#181528] px-6 py-3.5 text-base font-black text-white"
               href="/register"
             >
               <span>Create your anonymous link</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
+  </div>
             <div className="mt-3 flex items-center justify-center gap-3 text-xs font-medium text-zinc-400">
               <span className="flex items-center gap-1 text-emerald-400">
                 <Lock className="w-3 h-3" />
