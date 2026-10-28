@@ -56,7 +56,8 @@ export default function InboxView({ username }) {
     setError("");
     try {
       const response = await fetch("/api/messages", {
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 10 },
         signal,
       });
       const result = await response.json();
@@ -168,7 +169,7 @@ export default function InboxView({ username }) {
           </p>
         </div>
         <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-          <Inbox className="h-6 w-6 text-rose-400" />
+          <Inbox className="h-6 w-6 text-[#FF2E63] " />
         </div>
       </header>
 
@@ -247,8 +248,8 @@ export default function InboxView({ username }) {
                 type="button"
               >
                 <div className="mb-2 flex items-center justify-between gap-2">
-                  <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-rose-300">
-                    <span className="rounded-full border border-rose-500/20 bg-rose-500/10 px-2 py-1">
+                  <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-wider text-zinc-400">
+                    <span className="rounded-full border-white/10 bg-white/5 px-2 py-1">
                       anonymous
                     </span>
                     {!message.isRead && <span className="h-2 w-2 rounded-full bg-rose-400" />}
@@ -357,7 +358,7 @@ export default function InboxView({ username }) {
               </button>
             </div>
             <button
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] px-4 py-3 text-sm font-black shadow-lg shadow-rose-500/15 transition hover:opacity-90 disabled:opacity-60"
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#FF2E63] px-4 py-3 text-sm font-black shadow-lg shadow-rose-500/15 transition hover:opacity-90 disabled:opacity-60"
               disabled={isDownloading}
               onClick={handleDownloadStory}
               type="button"

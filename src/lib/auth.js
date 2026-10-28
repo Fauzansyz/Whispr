@@ -84,6 +84,12 @@ export const auth = betterAuth({
       },
     },
   },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 3600 * 24,
+    },
+  },
   rateLimit: {
     enabled: true,
     max: 100,
@@ -96,7 +102,7 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }
+    },
   },
 
   secret: process.env.BETTER_AUTH_SECRET,

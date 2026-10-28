@@ -15,13 +15,19 @@ import {
   UserRound,
 } from "lucide-react";
 import { authClient, useSession } from "@/lib/auth-client";
+import Image from "next/image";
 
 const inputClassName =
   "w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white outline-none transition placeholder:text-zinc-600 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20";
 
 export default function Profile() {
   const router = useRouter();
-  const { data: session, isPending, error: sessionError, refetch } = useSession();
+  const {
+    data: session,
+    isPending,
+    error: sessionError,
+    refetch,
+  } = useSession();
   const user = session?.user;
   const [draft, setDraft] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -35,6 +41,7 @@ export default function Profile() {
   const bio = draft?.bio ?? user?.bio ?? "";
   const isAcceptingMessages =
     draft?.isAcceptingMessages ?? user?.isAcceptingMessages ?? true;
+  const profileImage = user?.image;
 
   const updateDraft = (field, value) => {
     setDraft((current) => ({
@@ -61,7 +68,9 @@ export default function Profile() {
       return;
     }
     if (!/^[a-z0-9_.]{3,30}$/.test(cleanUsername)) {
-      setError("Usernames must be 3–30 characters using letters, numbers, dots, or underscores.");
+      setError(
+        "Usernames must be 3–30 characters using letters, numbers, dots, or underscores.",
+      );
       return;
     }
 
@@ -161,13 +170,18 @@ export default function Profile() {
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-500/10 text-rose-300">
               <UserRound className="h-8 w-8" />
             </div>
-            <h1 className="text-2xl font-black">Sign in to view your profile</h1>
+            <h1 className="text-2xl font-black">
+              Sign in to view your profile
+            </h1>
             <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-zinc-400">
-              Your profile settings and anonymous message link are available after
-              you sign in.
+              Your profile settings and anonymous message link are available
+              after you sign in.
             </p>
             {sessionError && (
-              <p role="alert" className="mt-4 text-sm font-semibold text-rose-300">
+              <p
+                role="alert"
+                className="mt-4 text-sm font-semibold text-rose-300"
+              >
                 {sessionError.message || "Could not load your session."}
               </p>
             )}
@@ -189,7 +203,8 @@ export default function Profile() {
                 Profile settings
               </h1>
               <p className="mt-2 text-sm text-zinc-400">
-                Personalize your page and decide when you want to receive messages.
+                Personalize your page and decide when you want to receive
+                messages.
               </p>
             </div>
 
@@ -197,9 +212,17 @@ export default function Profile() {
               <div className="h-28 bg-gradient-to-r from-[#FF2E63]/80 via-[#FF0055]/70 to-[#FF8E53]/80" />
               <div className="px-5 pb-5 sm:px-7">
                 <div className="-mt-10 mb-4 flex items-end justify-between">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-3xl border-4 border-zinc-900 bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-3xl font-black uppercase shadow-xl">
-                    {(user.email || user.name|| "?").charAt(0)}
-                  </div>
+                  {profileImage ? (
+                    <>
+                      <Image src={profileImage} height={20} width={20} className="rounded-3xl" />
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex h-20 w-20 items-center justify-center rounded-3xl border-1 border-rose-500 bg-[#FF2E63]/75 text-3xl font-black text-rose-300 uppercase shadow-xl">
+                        {(user.email || user.name || "?").charAt(0)}
+                      </div>
+                    </>
+                  )}
                   <div className="mb-1 flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-bold text-emerald-300">
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Account secured
@@ -223,7 +246,7 @@ export default function Profile() {
                 <div className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
                   <MessageCircle className="h-5 w-5 shrink-0 text-rose-400" />
                   <span className="truncate text-sm font-bold text-zinc-200">
-                    ngl.link/{username || "your-username"}
+                    {window.location.origin}/{username || "your-username"}
                   </span>
                 </div>
                 <button
@@ -231,7 +254,11 @@ export default function Profile() {
                   onClick={handleCopyLink}
                   className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] px-5 py-3 text-sm font-black shadow-lg shadow-rose-500/15 transition hover:opacity-90"
                 >
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  {copied ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
                   {copied ? "Copied" : "Copy link"}
                 </button>
               </div>
@@ -257,7 +284,9 @@ export default function Profile() {
                     autoComplete="name"
                     className={inputClassName}
                     maxLength={80}
-                    onChange={(event) => updateDraft("name", event.target.value)}
+                    onChange={(event) =>
+                      updateDraft("name", event.target.value)
+                    }
                     placeholder="Your name"
                     required
                     value={name}
@@ -269,7 +298,9 @@ export default function Profile() {
                     Username
                   </span>
                   <div className="flex items-center rounded-2xl border border-white/10 bg-white/5 focus-within:border-rose-500 focus-within:ring-2 focus-within:ring-rose-500/20">
-                    <span className="pl-4 text-sm font-bold text-zinc-500">@</span>
+                    <span className="pl-4 text-sm font-bold text-zinc-500">
+                      @
+                    </span>
                     <input
                       autoComplete="username"
                       className="min-w-0 flex-1 bg-transparent px-2 py-3 text-sm font-semibold text-white outline-none placeholder:text-zinc-600"
@@ -310,7 +341,9 @@ export default function Profile() {
                       <Mail className="h-4 w-4" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold">Accept anonymous messages</p>
+                      <p className="text-sm font-bold">
+                        Accept anonymous messages
+                      </p>
                       <p className="mt-1 text-xs leading-5 text-zinc-400">
                         Turn this off to pause new messages to your profile.
                       </p>
@@ -330,7 +363,9 @@ export default function Profile() {
                   >
                     <span
                       className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow mx-[5px] transition-transform ${
-                        isAcceptingMessages ? "-translate-x-1" : "-translate-x-6"
+                        isAcceptingMessages
+                          ? "-translate-x-1"
+                          : "-translate-x-6"
                       }`}
                     />
                   </button>

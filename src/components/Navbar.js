@@ -13,11 +13,11 @@ export default function Navbar({ activeTab, setActiveTab, unreadCount = 3, onOpe
           className="flex items-center gap-2 cursor-pointer group"
         >
           <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] flex items-center justify-center shadow-lg shadow-[#FF2E63]/30 group-hover:scale-105 transition-transform duration-200">
-            <span className="font-black text-white text-lg tracking-tighter italic">ngl</span>
+            <span className="font-black text-white text-lg tracking-tighter italic">Ws</span>
           </div>
           <div className="flex flex-col">
             <span className="font-extrabold text-xl tracking-tight text-white flex items-center gap-1">
-              ngl.link
+              whispr
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             </span>
             <span className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 -mt-1">

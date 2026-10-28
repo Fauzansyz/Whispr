@@ -34,7 +34,7 @@ export default function FAQSection({ onOpenSafety }) {
   };
 
   return (
-    <section className="w-full py-16 px-4 sm:px-8 bg-black/30 border-t border-white/5">
+    <section className="w-full py-16 px-4 sm:px-8 bg-[#161324]/90 border-t border-white/5">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">

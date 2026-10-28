@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Check, LoaderCircle, MessageCircle, Shield } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  LoaderCircle,
+  MessageCircle,
+  Shield,
+} from "lucide-react";
 
 export default function PublicMessagePage({ username }) {
   const [profile, setProfile] = useState(null);
@@ -45,7 +51,8 @@ export default function PublicMessagePage({ username }) {
         body: JSON.stringify({ username, content: message, prompt }),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Could not send your message.");
+      if (!response.ok)
+        throw new Error(result.error || "Could not send your message.");
       setSent(true);
       setMessage("");
     } catch (sendError) {
@@ -61,11 +68,14 @@ export default function PublicMessagePage({ username }) {
       <div className="pointer-events-none fixed bottom-[-20%] right-[-15%] h-[500px] w-[500px] rounded-full bg-[#FF8E53]/12 blur-[140px]" />
 
       <div className="relative z-10 w-full max-w-md">
-        <Link href="/" className="mb-8 flex items-center justify-center gap-2.5">
+        <Link
+          href="/"
+          className="mb-8 flex items-center justify-center gap-2.5"
+        >
           <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] text-xl font-black italic shadow-lg shadow-rose-500/25">
-            ngl
+            Ws
           </span>
-          <span className="text-xl font-black tracking-tight">ngl.link</span>
+          <span className="text-xl font-black tracking-tight">Whispr</span>
         </Link>
 
         {isLoading ? (
@@ -76,18 +86,23 @@ export default function PublicMessagePage({ username }) {
           <section className="rounded-3xl border border-white/10 bg-zinc-900/80 p-8 text-center shadow-2xl backdrop-blur-xl">
             <h1 className="text-2xl font-black">Link not found</h1>
             <p className="mt-2 text-sm text-zinc-400">{error}</p>
-            <Link href="/" className="mt-6 inline-flex text-sm font-bold text-rose-300 hover:text-rose-200">
-              Go to ngl.link
+            <Link
+              href="/"
+              className="mt-6 inline-flex text-sm font-bold text-rose-300 hover:text-rose-200"
+            >
+              Go to whispr
             </Link>
           </section>
         ) : (
           <>
             <section className="mb-4 rounded-3xl border border-white/10 bg-zinc-900/80 p-6 text-center shadow-2xl backdrop-blur-xl">
-              <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-tr from-[#FF2E63] to-[#FF8E53] text-2xl font-black uppercase shadow-lg shadow-rose-500/20">
+              <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-[#FF2E63] text-2xl font-black uppercase shadow-lg shadow-rose-500/20">
                 {profile.name.charAt(0)}
               </div>
               <h1 className="text-xl font-black">{profile.name}</h1>
-              <p className="mt-1 text-sm font-semibold text-rose-300">@{profile.username}</p>
+              <p className="mt-1 text-sm font-semibold text-rose-300">
+                @{profile.username}
+              </p>
               {profile.bio && (
                 <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-zinc-400">
                   {profile.bio}
@@ -126,7 +141,10 @@ export default function PublicMessagePage({ username }) {
                 onSubmit={handleSubmit}
               >
                 <div className="mb-4 rounded-2xl bg-gradient-to-br from-[#FF2E63] via-[#FF0055] to-[#FF8E53] p-5 text-center shadow-lg shadow-rose-500/15">
-                  <label className="mb-2 block text-[10px] font-black uppercase tracking-widest text-white/75" htmlFor="message-prompt">
+                  <label
+                    className="mb-2 block text-[10px] font-black uppercase tracking-widest text-white/75"
+                    htmlFor="message-prompt"
+                  >
                     Your prompt
                   </label>
                   <input
@@ -138,7 +156,9 @@ export default function PublicMessagePage({ username }) {
                   />
                 </div>
 
-                <label className="sr-only" htmlFor="anonymous-message">Your anonymous message</label>
+                <label className="sr-only" htmlFor="anonymous-message">
+                  Your anonymous message
+                </label>
                 <textarea
                   autoFocus
                   className="min-h-36 w-full resize-y rounded-2xl border border-white/10 bg-white/5 p-4 text-base text-white outline-none transition placeholder:text-zinc-500 focus:border-rose-500/60 focus:ring-2 focus:ring-rose-500/20"
@@ -161,25 +181,29 @@ export default function PublicMessagePage({ username }) {
                 </div>
 
                 {error && (
-                  <p className="mt-4 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-300" role="alert">
+                  <p
+                    className="mt-4 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-300"
+                    role="alert"
+                  >
                     {error}
                   </p>
                 )}
-
-                <button
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#FF2E63] via-[#FF0055] to-[#FF8E53] px-5 py-4 text-base font-black shadow-lg shadow-rose-500/20 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-                  disabled={isSending || !message.trim()}
-                  type="submit"
-                >
-                  {isSending ? (
-                    <LoaderCircle className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <>
-                      Send anonymously
-                      <ArrowRight className="h-5 w-5" />
-                    </>
-                  )}
-                </button>
+                <div className="relative max-w-md mx-auto bg-gradient-to-tr from-[#FF2E63] via-[#FF0055] to-[#FF8E53] transition-all hover:opacity-95 active:scale-95 p-0.5 mt-2">
+                  <button
+                    className="flex w-full items-center justify-center gap-2 bg-[#181528] px-6 py-3.5 text-base font-black text-white"
+                    disabled={isSending || !message.trim()}
+                    type="submit"
+                  >
+                    {isSending ? (
+                      <LoaderCircle className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <>
+                        Send anonymously
+                        <ArrowRight className="h-5 w-5" />
+                      </>
+                    )}
+                  </button>
+                </div>
               </form>
             )}
           </>
@@ -187,7 +211,10 @@ export default function PublicMessagePage({ username }) {
 
         <p className="mt-6 text-center text-xs text-zinc-500">
           Want your own anonymous inbox?{" "}
-          <Link className="font-bold text-rose-300 hover:text-rose-200" href="/register">
+          <Link
+            className="font-bold text-rose-300 hover:text-rose-200"
+            href="/register"
+          >
             Create an account
           </Link>
         </p>

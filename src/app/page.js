@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FAQSection from "@/components/FAQSection";
-import GameModesSection from "@/components/GameModesSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import LandingHero from "@/components/LandingHero";
 import LandingNavbar from "@/components/LandingNavbar";
@@ -14,13 +13,17 @@ export default function Home() {
   const router = useRouter();
   const { data: session } = useSession();
   const [isSafetyOpen, setIsSafetyOpen] = useState(false);
+  console.log(session?.user)
 
-  const scrollToSection = (sectionId) => {
+  const userAgent = navigator.userAgent;
+  console.log(userAgent);
+
+ const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-[#0f0c20] font-sans text-white selection:bg-rose-500 selection:text-white">
+    <div className="relative flex min-h-screen flex-col overflow-hi dden bg-[#0f0c20] font-sans text-white selection:bg-rose-500 selection:text-white">
       <div className="pointer-events-none fixed left-[-10%] top-[-10%] h-[550px] w-[550px] rounded-full bg-[#FF2E63]/15 blur-[140px]" />
       <div className="pointer-events-none fixed bottom-[-10%] right-[-10%] h-[550px] w-[550px] rounded-full bg-[#FF8E53]/15 blur-[140px]" />
 
@@ -33,7 +36,6 @@ export default function Home() {
       <main className="relative z-10 flex w-full flex-1 flex-col items-center">
         <LandingHero />
         <HowItWorksSection />
-        <GameModesSection />
         <FAQSection onOpenSafety={() => setIsSafetyOpen(true)} />
       </main>
 
@@ -45,7 +47,7 @@ export default function Home() {
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               type="button"
             >
-              Home
+             Home
             </button>
             <span>•</span>
             <button
@@ -53,7 +55,7 @@ export default function Home() {
               onClick={() => router.push(session ? "/dashboard" : "/login")}
               type="button"
             >
-              {session ? "Dashboard" : "Log In"}
+              {session ? "Dashboard" : "Log in"}
             </button>
             <span>•</span>
             <button
