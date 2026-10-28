@@ -276,8 +276,7 @@ export default function Profile() {
                 </p>
               </div>
               <div className="w-full h-auto mt-2">
-                {!isGoogleLinked ? (
-                  <div className="flex flex-col gap-2.5 mb-2">
+                  <div className={`${isGoogleLinked ? "hidden" : "flex"} flex-col gap-2.5 mb-2`}>
                     <button
                       type="button"
                       onClick={() => handleLinkAccount}
@@ -311,9 +310,6 @@ export default function Profile() {
                         : "Connect with Google"}
                     </button>
                   </div>
-                ) : (
-                  <></>
-                )}
               </div>
             </section>
 
