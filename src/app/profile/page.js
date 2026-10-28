@@ -61,9 +61,14 @@ export default function Profile() {
       const res = await fetch(`/api/account/check/linked/${uid}`);
       const data = await res.json();
       const providerId = data.accounts.providerId;
-      providerId === "google"
-        ? setIsGoogleLinked(true)
-        : setIsGoogleLinked(false);
+      if (!providerId) {
+        throw new error("Invalid provider ID");
+      } else {
+        console.log(providerId);
+        providerId === "google"
+          ? setIsGoogleLinked(true)
+          : setIsGoogleLinked(false);
+      }
     } catch (err) {
       console.log(err);
       setIsGoogleLinked(false);
