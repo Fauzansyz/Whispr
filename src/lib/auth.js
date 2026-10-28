@@ -98,14 +98,14 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-
   account: {
     accountLinking: {
+      allowDifferentEmails: true,
       enabled: true,
       trustedProviders: ["google"],
-      disableImplicitLinking: false,
     },
   },
+
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
