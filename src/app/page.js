@@ -13,6 +13,7 @@ export default function Home() {
   const router = useRouter();
   const { data: session } = useSession();
   const [isSafetyOpen, setIsSafetyOpen] = useState(false);
+  console.log(session?.user)
 
   const userAgent = navigator.userAgent;
   console.log(userAgent);
@@ -22,7 +23,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-[#0f0c20] font-sans text-white selection:bg-rose-500 selection:text-white">
+    <div className="relative flex min-h-screen flex-col overflow-hi dden bg-[#0f0c20] font-sans text-white selection:bg-rose-500 selection:text-white">
       <div className="pointer-events-none fixed left-[-10%] top-[-10%] h-[550px] w-[550px] rounded-full bg-[#FF2E63]/15 blur-[140px]" />
       <div className="pointer-events-none fixed bottom-[-10%] right-[-10%] h-[550px] w-[550px] rounded-full bg-[#FF8E53]/15 blur-[140px]" />
 
