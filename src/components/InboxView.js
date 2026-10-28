@@ -56,7 +56,8 @@ export default function InboxView({ username }) {
     setError("");
     try {
       const response = await fetch("/api/messages", {
-        cache: "no-store",
+        cache: "force-cache",
+        next: { revalidate: 10 },
         signal,
       });
       const result = await response.json();
