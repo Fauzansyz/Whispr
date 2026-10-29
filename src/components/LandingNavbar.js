@@ -104,6 +104,7 @@ export default function LandingNavbar({
               <Link
                 href="/dashboard"
                 className="rounded-xl bg-white/10 px-3 py-2 text-xs font-bold text-white transition hover:bg-white/15"
+            prefetch={false}
               >
                 Dashboard
               </Link>
