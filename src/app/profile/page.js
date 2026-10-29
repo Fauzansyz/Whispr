@@ -77,6 +77,7 @@ export default function Profile() {
 
   const handleLinkAccount = async () => {
     setIsGoogleSubmitting(true);
+    console.log("Akun di Link")
     try {
       const { data, error } = await authClient.linkSocial({
         provider: "google",
@@ -279,7 +280,7 @@ export default function Profile() {
                   <div className={`${isGoogleLinked ? "hidden" : "flex"} flex-col gap-2.5 mb-2`}>
                     <button
                       type="button"
-                      onClick={() => handleLinkAccount}
+                      onClick={handleLinkAccount}
                       disabled={isGoogleSubmitting}
                       className="w-full py-3.5 bg-white hover:bg-zinc-100 border border-white/10 rounded-2xl text-sm font-bold text-zinc-900 flex items-center justify-center gap-2.5 transition-colors disabled:opacity-60 shadow-lg"
                     >
