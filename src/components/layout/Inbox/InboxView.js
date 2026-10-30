@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { downloadHtmlImage } from "@/lib/download-story";
 import MessageStoryImage from "@/components/fragment/StoryImage/MessageStoryImage";
-
+import { Messages } from "@/hooks/MessageHooks";
 const FILTERS = [
   { id: "all", label: "All" },
   { id: "unread", label: "Unread" },
@@ -31,14 +31,12 @@ function formatDate(value) {
 }
 
 export default function InboxView({ username }) {
-  const [messages, setMessages] = useState([]);
   const [activeMessage, setActiveMessage] = useState(null);
   const storyRef = useRef(null);
   const [filter, setFilter] = useState("all");
-  const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const { messages, isLoading, error, refetch } = Messages();
 
   const unreadCount = messages.filter(
     (message) => !message.isRead && !message.isSpam,
@@ -53,48 +51,6 @@ export default function InboxView({ username }) {
       }),
     [filter, messages],
   );
-
-  const loadMessages = async (signal) => {
-    setError("");
-    try {
-      const response = await fetch("/api/messages", {
-        cache: "force-cache",
-        next: { revalidate: 10 },
-        signal,
-      });
-      const result = await response.json();
-      if (!response.ok)
-        throw new Error(result.error || "Could not load your inbox.");
-      setMessages(result.messages);
-    } catch (loadError) {
-      if (loadError.name !== "AbortError") {
-        setError(loadError.message || "Could not load your inbox.");
-      }
-    } finally {
-      if (!signal?.aborted) setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/messages", { cache: "no-store", signal: controller.signal })
-      .then(async (response) => {
-        const result = await response.json();
-        if (!response.ok)
-          throw new Error(result.error || "Could not load your inbox.");
-        setMessages(result.messages);
-        console.log(result)
-      })
-      .catch((loadError) => {
-        if (loadError.name !== "AbortError") {
-          setError(loadError.message || "Could not load your inbox.");
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setIsLoading(false);
-      });
-    return () => controller.abort();
-  }, []);
 
   const updateMessage = async (messageId, action) => {
     setError("");
@@ -247,8 +203,7 @@ export default function InboxView({ username }) {
             <button
               className="mt-5 rounded-xl bg-white/10 px-4 py-2.5 text-sm font-bold transition hover:bg-white/15"
               onClick={() => {
-                setIsLoading(true);
-                loadMessages().finally(() => setIsLoading(false));
+                refetch();
               }}
               type="button"
             >
