@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import HowItWorksSection from "@/components/HowItWorksSection";
-import LandingHero from "@/components/LandingHero";
-import LandingNavbar from "@/components/LandingNavbar";
-import SafetyModal from "@/components/SafetyModal";
+import HowItWorksSection from "@/components/layout/LandingPage/HowItWorksSection";
+import LandingHero from "@/components/layout/LandingPage/LandingHero";
+import LandingNavbar from "@/components/layout/LandingPage/LandingNavbar";
+import SafetyModal from "@/components/layout/LandingPage/SafetyModal";
 import { useSession } from "@/lib/auth-client";
 
 export default function Home() {
