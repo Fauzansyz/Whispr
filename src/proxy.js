@@ -8,5 +8,5 @@ export async function proxy(req) {
 }
 
 export const config = {
-  matcher: "/login",
+  matcher: ["/login", "/register"],
 };

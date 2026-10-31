@@ -12,8 +12,8 @@ import {
   Settings2,
   UserRound,
 } from "lucide-react";
-import GetLinkView from "@/components/GetLinkView";
-import InboxView from "@/components/InboxView";
+import GetLinkView from "@/components/layout/LinkViews/GetLinkView";
+import InboxView from "@/components/layout/Inbox/InboxView";
 import { authClient, useSession } from "@/lib/auth-client";
 
 export default function DashboardPage() {

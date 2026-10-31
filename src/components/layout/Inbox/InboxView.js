@@ -13,8 +13,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { downloadHtmlImage } from "@/lib/download-story";
-import MessageStoryImage from "./MessageStoryImage";
-
+import MessageStoryImage from "@/components/fragment/StoryImage/MessageStoryImage";
+import { Messages } from "@/hooks/MessageHooks";
 const FILTERS = [
   { id: "all", label: "All" },
   { id: "unread", label: "Unread" },
@@ -31,16 +31,16 @@ function formatDate(value) {
 }
 
 export default function InboxView({ username }) {
-  const [messages, setMessages] = useState([]);
   const [activeMessage, setActiveMessage] = useState(null);
   const storyRef = useRef(null);
   const [filter, setFilter] = useState("all");
-  const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const { messages, isLoading, error, refetch } = Messages();
 
-  const unreadCount = messages.filter((message) => !message.isRead && !message.isSpam).length;
+  const unreadCount = messages.filter(
+    (message) => !message.isRead && !message.isSpam,
+  ).length;
   const visibleMessages = useMemo(
     () =>
       messages.filter((message) => {
@@ -52,45 +52,6 @@ export default function InboxView({ username }) {
     [filter, messages],
   );
 
-  const loadMessages = async (signal) => {
-    setError("");
-    try {
-      const response = await fetch("/api/messages", {
-        cache: "force-cache",
-        next: { revalidate: 10 },
-        signal,
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Could not load your inbox.");
-      setMessages(result.messages);
-    } catch (loadError) {
-      if (loadError.name !== "AbortError") {
-        setError(loadError.message || "Could not load your inbox.");
-      }
-    } finally {
-      if (!signal?.aborted) setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/messages", { cache: "no-store", signal: controller.signal })
-      .then(async (response) => {
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || "Could not load your inbox.");
-        setMessages(result.messages);
-      })
-      .catch((loadError) => {
-        if (loadError.name !== "AbortError") {
-          setError(loadError.message || "Could not load your inbox.");
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setIsLoading(false);
-      });
-    return () => controller.abort();
-  }, []);
-
   const updateMessage = async (messageId, action) => {
     setError("");
     setNotice("");
@@ -101,7 +62,8 @@ export default function InboxView({ username }) {
         body: JSON.stringify({ action }),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Could not update this message.");
+      if (!response.ok)
+        throw new Error(result.error || "Could not update this message.");
       const changes = {
         read: { isRead: true },
         unread: { isRead: false },
@@ -111,7 +73,9 @@ export default function InboxView({ username }) {
         unspam: { isSpam: false },
       }[action];
       setMessages((current) =>
-        current.map((item) => item.id === messageId ? { ...item, ...changes } : item),
+        current.map((item) =>
+          item.id === messageId ? { ...item, ...changes } : item,
+        ),
       );
       setActiveMessage((current) =>
         current?.id === messageId ? { ...current, ...changes } : current,
@@ -129,10 +93,15 @@ export default function InboxView({ username }) {
   const handleDelete = async (messageId) => {
     setError("");
     try {
-      const response = await fetch(`/api/messages/${messageId}`, { method: "DELETE" });
+      const response = await fetch(`/api/messages/${messageId}`, {
+        method: "DELETE",
+      });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Could not delete this message.");
-      setMessages((current) => current.filter((message) => message.id !== messageId));
+      if (!response.ok)
+        throw new Error(result.error || "Could not delete this message.");
+      setMessages((current) =>
+        current.filter((message) => message.id !== messageId),
+      );
       setActiveMessage(null);
       setNotice("Message deleted.");
     } catch (deleteError) {
@@ -144,7 +113,10 @@ export default function InboxView({ username }) {
     setIsDownloading(true);
     setError("");
     try {
-      await downloadHtmlImage(storyRef.current, `ngl-reply-${activeMessage.id}.png`);
+      await downloadHtmlImage(
+        storyRef.current,
+        `ngl-reply-${activeMessage.id}.png`,
+      );
     } catch (downloadError) {
       setError(downloadError.message || "Could not download the story image.");
     } finally {
@@ -174,17 +146,26 @@ export default function InboxView({ username }) {
       </header>
 
       {notice && (
-        <p className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-300" role="status">
+        <p
+          className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-300"
+          role="status"
+        >
           {notice}
         </p>
       )}
       {error && (
-        <p className="mb-4 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-300" role="alert">
+        <p
+          className="mb-4 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-300"
+          role="alert"
+        >
           {error}
         </p>
       )}
 
-      <nav aria-label="Filter messages" className="mb-4 flex gap-2 overflow-x-auto pb-1">
+      <nav
+        aria-label="Filter messages"
+        className="mb-4 flex gap-2 overflow-x-auto pb-1"
+      >
         {FILTERS.map((item) => (
           <button
             aria-pressed={filter === item.id}
@@ -222,8 +203,7 @@ export default function InboxView({ username }) {
             <button
               className="mt-5 rounded-xl bg-white/10 px-4 py-2.5 text-sm font-bold transition hover:bg-white/15"
               onClick={() => {
-                setIsLoading(true);
-                loadMessages().finally(() => setIsLoading(false));
+                refetch();
               }}
               type="button"
             >
@@ -252,9 +232,14 @@ export default function InboxView({ username }) {
                     <span className="rounded-full border-white/10 bg-white/5 px-2 py-1">
                       anonymous
                     </span>
-                    {!message.isRead && <span className="h-2 w-2 rounded-full bg-rose-400" />}
+                    {!message.isRead && (
+                      <span className="h-2 w-2 rounded-full bg-rose-400" />
+                    )}
                   </span>
-                  <time className="text-[11px] text-zinc-500" dateTime={message.createdAt}>
+                  <time
+                    className="text-[11px] text-zinc-500"
+                    dateTime={message.createdAt}
+                  >
                     {formatDate(message.createdAt)}
                   </time>
                 </div>
@@ -262,7 +247,9 @@ export default function InboxView({ username }) {
                   {message.content}
                 </p>
                 {message.prompt && (
-                  <p className="mt-2 truncate text-xs text-zinc-500">Prompt: {message.prompt}</p>
+                  <p className="mt-2 truncate text-xs text-zinc-500">
+                    Prompt: {message.prompt}
+                  </p>
                 )}
               </button>
               <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-2">
@@ -270,14 +257,25 @@ export default function InboxView({ username }) {
                   {message.isRead ? "Read" : "New message"}
                 </span>
                 <button
-                  aria-label={message.isStarred ? "Remove star" : "Star message"}
+                  aria-label={
+                    message.isStarred ? "Remove star" : "Star message"
+                  }
                   className={`rounded-lg p-2 transition hover:bg-white/10 ${
-                    message.isStarred ? "text-amber-300" : "text-zinc-500 hover:text-amber-200"
+                    message.isStarred
+                      ? "text-amber-300"
+                      : "text-zinc-500 hover:text-amber-200"
                   }`}
-                  onClick={() => updateMessage(message.id, message.isStarred ? "unstar" : "star")}
+                  onClick={() =>
+                    updateMessage(
+                      message.id,
+                      message.isStarred ? "unstar" : "star",
+                    )
+                  }
                   type="button"
                 >
-                  <Star className={`h-4 w-4 ${message.isStarred ? "fill-current" : ""}`} />
+                  <Star
+                    className={`h-4 w-4 ${message.isStarred ? "fill-current" : ""}`}
+                  />
                 </button>
               </div>
             </article>
@@ -287,95 +285,126 @@ export default function InboxView({ username }) {
 
       {activeMessage && (
         <>
-        <MessageStoryImage message={activeMessage} storyRef={storyRef} username={username} />
+          <MessageStoryImage
+            message={activeMessage}
+            storyRef={storyRef}
+            username={username}
+          />
           <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
             onClick={() => setActiveMessage(null)}
             role="presentation"
           >
-          <section
-            aria-labelledby="message-detail-heading"
-            aria-modal="true"
-            className="relative w-full max-w-md rounded-3xl border border-white/10 bg-zinc-900 p-5 shadow-2xl sm:p-7"
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-          >
-            <button
-              aria-label="Close message"
-              className="absolute right-5 top-5 rounded-full p-3 text-zinc-300 transition hover:bg-white/20"
-              onClick={() => setActiveMessage(null)}
-              type="button"
+            <section
+              aria-labelledby="message-detail-heading"
+              aria-modal="true"
+              className="relative w-full max-w-md rounded-3xl border border-white/10 bg-zinc-900 p-5 shadow-2xl sm:p-7"
+              onClick={(event) => event.stopPropagation()}
+              role="dialog"
             >
-              ×
-            </button>
-            <div className="mb-4 rounded-2xl bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] p-4 text-center">
-              <span className="text-[10px] font-black uppercase tracking-widest text-white/75">
-                Anonymous message
-              </span>
-              {activeMessage.prompt && (
-                <p className="mt-2 text-sm font-bold">{activeMessage.prompt}</p>
+              <button
+                aria-label="Close message"
+                className="absolute right-5 top-5 rounded-full p-3 text-zinc-300 transition hover:bg-white/20"
+                onClick={() => setActiveMessage(null)}
+                type="button"
+              >
+                ×
+              </button>
+              <div className="mb-4 rounded-2xl bg-gradient-to-r from-[#FF2E63] to-[#FF8E53] p-4 text-center">
+                <span className="text-[10px] font-black uppercase tracking-widest text-white/75">
+                  Anonymous message
+                </span>
+                {activeMessage.prompt && (
+                  <p className="mt-2 text-sm font-bold">
+                    {activeMessage.prompt}
+                  </p>
+                )}
+              </div>
+              <h2 className="sr-only" id="message-detail-heading">
+                Message details
+              </h2>
+              <blockquote className="break-words rounded-2xl border border-white/10 bg-white/5 p-5 text-center text-lg font-bold leading-7">
+                “{activeMessage.content}”
+              </blockquote>
+              <time
+                className="mt-3 block text-center text-xs text-zinc-500"
+                dateTime={activeMessage.createdAt}
+              >
+                Received {formatDate(activeMessage.createdAt)}
+              </time>
+              <div className="mt-5 grid grid-cols-2 gap-2">
+                <button
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-xs font-bold transition hover:bg-white/10"
+                  onClick={() =>
+                    updateMessage(
+                      activeMessage.id,
+                      activeMessage.isRead ? "unread" : "read",
+                    )
+                  }
+                  type="button"
+                >
+                  <MailOpen className="h-4 w-4" />
+                  Mark {activeMessage.isRead ? "unread" : "read"}
+                </button>
+                <button
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-xs font-bold transition hover:bg-white/10"
+                  onClick={() =>
+                    updateMessage(
+                      activeMessage.id,
+                      activeMessage.isStarred ? "unstar" : "star",
+                    )
+                  }
+                  type="button"
+                >
+                  <Star
+                    className={`h-4 w-4 ${activeMessage.isStarred ? "fill-current text-amber-300" : ""}`}
+                  />
+                  {activeMessage.isStarred ? "Unstar" : "Star"}
+                </button>
+                <button
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/20 bg-rose-500/10 px-3 py-3 text-xs font-bold text-rose-200 transition hover:bg-rose-500/20"
+                  onClick={() =>
+                    updateMessage(
+                      activeMessage.id,
+                      activeMessage.isSpam ? "unspam" : "spam",
+                    )
+                  }
+                  type="button"
+                >
+                  <Archive className="h-4 w-4" />
+                  {activeMessage.isSpam ? "Restore" : "Report spam"}
+                </button>
+                <button
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-xs font-bold text-zinc-300 transition hover:bg-white/10"
+                  onClick={() => handleDelete(activeMessage.id)}
+                  type="button"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Delete
+                </button>
+              </div>
+              <button
+                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#FF2E63] px-4 py-3 text-sm font-black shadow-lg shadow-rose-500/15 transition hover:opacity-90 disabled:opacity-60"
+                disabled={isDownloading}
+                onClick={handleDownloadStory}
+                type="button"
+              >
+                {isDownloading ? (
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                Download reply story
+              </button>
+              {error && (
+                <p
+                  className="mt-3 text-center text-xs font-semibold text-rose-300"
+                  role="alert"
+                >
+                  {error}
+                </p>
               )}
-            </div>
-            <h2 className="sr-only" id="message-detail-heading">Message details</h2>
-            <blockquote className="break-words rounded-2xl border border-white/10 bg-white/5 p-5 text-center text-lg font-bold leading-7">
-              “{activeMessage.content}”
-            </blockquote>
-             <time className="mt-3 block text-center text-xs text-zinc-500" dateTime={activeMessage.createdAt}>
-              Received {formatDate(activeMessage.createdAt)}
-            </time>
-            <div className="mt-5 grid grid-cols-2 gap-2">
-              <button
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-xs font-bold transition hover:bg-white/10"
-                onClick={() => updateMessage(activeMessage.id, activeMessage.isRead ? "unread" : "read")}
-                type="button"
-              >
-                <MailOpen className="h-4 w-4" />
-                Mark {activeMessage.isRead ? "unread" : "read"}
-              </button>
-              <button
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-xs font-bold transition hover:bg-white/10"
-                onClick={() => updateMessage(activeMessage.id, activeMessage.isStarred ? "unstar" : "star")}
-                type="button"
-              >
-                <Star className={`h-4 w-4 ${activeMessage.isStarred ? "fill-current text-amber-300" : ""}`} />
-                {activeMessage.isStarred ? "Unstar" : "Star"}
-              </button>
-              <button
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/20 bg-rose-500/10 px-3 py-3 text-xs font-bold text-rose-200 transition hover:bg-rose-500/20"
-                onClick={() => updateMessage(activeMessage.id, activeMessage.isSpam ? "unspam" : "spam")}
-                type="button"
-              >
-                <Archive className="h-4 w-4" />
-                {activeMessage.isSpam ? "Restore" : "Report spam"}
-              </button>
-              <button
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-3 text-xs font-bold text-zinc-300 transition hover:bg-white/10"
-                onClick={() => handleDelete(activeMessage.id)}
-                type="button"
-              >
-                <Trash2 className="h-4 w-4" />
-                Delete
-              </button>
-            </div>
-            <button
-              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#FF2E63] px-4 py-3 text-sm font-black shadow-lg shadow-rose-500/15 transition hover:opacity-90 disabled:opacity-60"
-              disabled={isDownloading}
-              onClick={handleDownloadStory}
-              type="button"
-            >
-              {isDownloading ? (
-                <LoaderCircle className="h-4 w-4 animate-spin" />
-              ) : (
-                <Download className="h-4 w-4" />
-              )}
-              Download reply story
-            </button>
-            {error && (
-              <p className="mt-3 text-center text-xs font-semibold text-rose-300" role="alert">
-                {error}
-              </p>
-            )}
-          </section>
+            </section>
           </div>
         </>
       )}

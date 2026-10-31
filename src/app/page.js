@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import FAQSection from "@/components/FAQSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import LandingHero from "@/components/LandingHero";
 import LandingNavbar from "@/components/LandingNavbar";
@@ -25,7 +24,6 @@ export default function Home() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hi dden bg-[#0f0c20] font-sans text-white selection:bg-rose-500 selection:text-white">
       <div className="pointer-events-none fixed left-[-10%] top-[-10%] h-[550px] w-[550px] rounded-full bg-[#FF2E63]/15 blur-[140px]" />
-      <div className="pointer-events-none fixed bottom-[-10%] right-[-10%] h-[550px] w-[550px] rounded-full bg-[#FF8E53]/15 blur-[140px]" />
 
       <LandingNavbar
         userHandle={session?.user?.username || session?.user?.name}
@@ -36,7 +34,6 @@ export default function Home() {
       <main className="relative z-10 flex w-full flex-1 flex-col items-center">
         <LandingHero />
         <HowItWorksSection />
-        <FAQSection onOpenSafety={() => setIsSafetyOpen(true)} />
       </main>
 
       <footer className="relative z-10 mt-auto w-full border-t border-white/5 bg-[#0f0c20]/80 py-8 text-center text-xs font-medium text-zinc-500 backdrop-blur-md">
