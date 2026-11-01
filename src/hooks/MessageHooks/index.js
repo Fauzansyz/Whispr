@@ -20,5 +20,12 @@ export function Messages() {
   useEffect(() => {
     fetchMessages();
   }, []);
-  return { messages, error, isLoading, refetch: fetchMessages };
+  return {
+    messages,
+    setMessages,
+    error,
+    setError,
+    isLoading,
+    refetch: fetchMessages,
+  };
 }

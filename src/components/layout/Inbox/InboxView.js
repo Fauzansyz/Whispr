@@ -36,7 +36,8 @@ export default function InboxView({ username }) {
   const [filter, setFilter] = useState("all");
   const [isDownloading, setIsDownloading] = useState(false);
   const [notice, setNotice] = useState("");
-  const { messages, isLoading, error, refetch } = Messages();
+  const { messages, setMessages, isLoading, error, setError, refetch } =
+    Messages();
 
   const unreadCount = messages.filter(
     (message) => !message.isRead && !message.isSpam,
